@@ -1,22 +1,27 @@
 import axios from 'axios';
 import conf from '../conf/conf.js';
 
-const Adminlogin = `${conf.API_URL}/admin/login` 
+const Adminlogin = `${conf.API_URL}/auth/api/admin/login`;
 
 class AuthService {
 
-  async adminLogin(data) {
+ async adminLogin(data) {
+  try {
     const response = await axios.post(
       Adminlogin,
       data,
       { withCredentials: true }
     );
-    return response
+    return response;
+  } catch (error) {
+    console.error("Login Error:", error);
+    return error.response;
   }
+}
 
   async employeeLogin(data) {
     return axios.post(
-      `${conf.API_URL}/employee/login`,
+      `${conf.API_URL}/api/employee/login`,
       data,
       { withCredentials: true }
     );
@@ -24,7 +29,7 @@ class AuthService {
 
   async userLogin(data) {
     return axios.post(
-      `${conf.API_URL}/user/login`,
+      `${conf.API_URL}/api/user/login`,
       data,
       { withCredentials: true }
     );
@@ -32,16 +37,16 @@ class AuthService {
 
   async getCurrentUser() {
     return axios.get(
-      `${conf.API_URL}/auth/me`,
+      `${conf.API_URL}/api/auth/me`,
       { withCredentials: true }
     );
   }
 
   async logout(role) {
     const map = {
-      admin: "/admin/logout",
-      employee: "/employee/logout",
-      user: "/user/logout"
+      admin: "/api/admin/logout",
+      employee: "/api/employee/logout",
+      user: "/api/user/logout"
     };
 
     return axios.post(

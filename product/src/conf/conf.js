@@ -1,5 +1,5 @@
 const conf = {
-  API_URL: "http://localhost:5000"
+  API_URL: "https://six-sem-project.onrender.com"
 };
 
 export default conf;
