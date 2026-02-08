@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom";
 import authService from "../../auth/authService";
 import { logout } from "../../auth/authSlice";
 
-function AdminDashboard() {
+function UserDashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      const res = await authService.logout("admin");
+      const res = await authService.logout("user");
 
       if (res?.data?.success) {
         dispatch(logout());
-        navigate("/admin/login");
+        navigate("/user/login");
       } else {
         alert("Logout failed");
       }
@@ -25,7 +25,7 @@ function AdminDashboard() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Admin Dashboard 🔐</h1>
+      <h1>User Dashboard 👤</h1>
 
       <button
         onClick={handleLogout}
@@ -41,4 +41,4 @@ function AdminDashboard() {
   );
 }
 
-export default AdminDashboard;
+export default UserDashboard;
