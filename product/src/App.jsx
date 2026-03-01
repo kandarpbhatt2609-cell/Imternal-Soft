@@ -8,6 +8,9 @@ import AdminProtectedRoute from "./routes/AdminProtectedRoute";
 import AdminForgotPassword from "./pages/admin/AdminForgotPassword";
 
 import EmployeeLogin from "./pages/employee/EmployeeLogin";
+import EmployeeDashboard from "./pages/employee/EmploeeDashboard";
+import EmployeeProtectedRoute from "./routes/EmployeeProtectedRoute";
+import EmployeeForgotPassword from "./pages/employee/EmployeeForgotPassword";
 
 import UserLogin from "./pages/user/UserLogin";
 import UserRegister from "./pages/user/UserRegister";
@@ -39,6 +42,19 @@ function App() {
 
       {/* Employee */}
       <Route path="/employee/login" element={<EmployeeLogin />} />
+     <Route 
+  path="/employee/dashboard" 
+  element={
+    <EmployeeProtectedRoute>
+      <EmployeeDashboard />
+    </EmployeeProtectedRoute>
+  } 
+/>
+
+<Route
+  path="/employee/forgot-password"
+  element={<EmployeeForgotPassword />}
+/>
 
       {/* User */}
       <Route path="/user/login" element={<UserLogin />} />

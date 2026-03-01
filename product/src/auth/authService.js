@@ -4,6 +4,7 @@ import conf from '../conf/conf.js';
 const Adminlogin = `${conf.API_URL}/auth/api/admin/login`;
 const AdminRegister = `${conf.API_URL}/auth/api/admin/register`;
 const UserRegister = `${conf.API_URL}/auth/api/user/register`;
+const EmployeeRegister = `${conf.API_URL}/auth/api/employee/register`;
 
 class AuthService {
 
@@ -76,6 +77,17 @@ class AuthService {
     }
   }
 
+  async employeeRegister(data) {
+  try {
+    // Matches the structure in your userRegister method
+    return await axios.post(EmployeeRegister, data, {
+      withCredentials: true,
+    });
+  } catch (err) {
+    return err.response;
+  }
+}
+
   async getAdminSession() {
     return axios.get(
       `${conf.API_URL}/auth/api/admin/dashboard`,
@@ -85,12 +97,18 @@ class AuthService {
 
   async employeeLogin(data) {
     return axios.post(
-      `${conf.API_URL}/api/employee/login`,
+      `${conf.API_URL}/auth/api/employee/login`,
       data,
       { withCredentials: true }
     );
   }
 
+  async getEmployeeSession() {
+  return axios.get(
+    `${conf.API_URL}/auth/api/employee/dashboard`, // Correct endpoint for employees
+    { withCredentials: true }
+  );
+}
   async userLogin(data) {
     return axios.post(
       `${conf.API_URL}/auth/api/user/login`,
