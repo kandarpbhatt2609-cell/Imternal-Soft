@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import authService from "../../auth/authService";
 import { loginSuccess } from "../../auth/authSlice";
+import "../admin/AdminLogin.css";
 
 const UserRegister = () => {
   const [form, setForm] = useState({
@@ -15,6 +16,7 @@ const UserRegister = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,16 +26,41 @@ const UserRegister = () => {
     setFieldErrors({ ...fieldErrors, [e.target.name]: "" });
   };
 
+  // Client-Side Validation (Same as Admin)
+  const validateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      errors.email = ["Please enter a valid email address."]; 
+      isValid = false;
+    }
+
+    const hasUppercase = /[A-Z]/.test(form.password);
+    const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(form.password);
+    const hasDigit = /[0-9]/.test(form.password);
+
+    if (!hasUppercase || !hasSymbol || !hasDigit) {
+      errors.password = ["Password needs 1 uppercase, 1 symbol, and 1 digit."];
+      isValid = false;
+    }
+
+    setFieldErrors(errors);
+    return isValid;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
     setFieldErrors({});
 
+    if (!validateForm()) return;
+
     try {
       const res = await authService.userRegister(form);
 
-      // ❌ API or validation error
       if (!res || res.data?.success === false) {
         if (res?.data?.errors) {
           setFieldErrors(res.data.errors);
@@ -43,10 +70,9 @@ const UserRegister = () => {
         return;
       }
 
-      // ✅ success
-      setMessage(res.data.message);
+      // Success message with the email link notification
+      setMessage(`Registration successful! A verification link has been sent to your email: ${form.email}`);
 
-      // optional auto-login
       dispatch(
         loginSuccess({
           email: res.data.data.email,
@@ -54,67 +80,151 @@ const UserRegister = () => {
         })
       );
 
+      // 5-second delay before redirecting
       setTimeout(() => {
-        navigate("/user/dashboard");
-      }, 800);
+        navigate("/user/login");
+      }, 5000);
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <h2>User Register</h2>
+    <div className="auth-wrapper">
+      <div className="auth-container">
+        
+        {/* LEFT PANE: FORM */}
+        <div className="form-pane">
+          <div className="logo">
+            <div className="logo-icon">🛒</div>
+            <div className="logo-text">
+              <h1>Nest</h1>
+              <p>MART & GROCERY</p>
+            </div>
+          </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}
+          <div className="toggle-buttons">
+            <button 
+              type="button" 
+              className="toggle-btn inactive" 
+              onClick={() => navigate('/user/login')}
+            >
+              Login
+            </button>
+            <button type="button" className="toggle-btn active">Sign Up</button>
+          </div>
 
-      <input
-        name="username"
-        placeholder="Username"
-        value={form.username}
-        onChange={handleChange}
-      />
-      {fieldErrors.username && (
-        <p style={{ color: "red" }}>{fieldErrors.username[0]}</p>
-      )}
+          <div className="form-header">
+            <h2>Create Account</h2>
+            <p>Sign up to start shopping with Nest Mart</p>
+          </div>
 
-      <input
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-      />
-      {fieldErrors.email && (
-        <p style={{ color: "red" }}>{fieldErrors.email[0]}</p>
-      )}
+          {error && <p className="msg-error">{error}</p>}
+          {message && <p className="msg-success">{message}</p>}
 
-      <input
-        name="phonenumber"
-        placeholder="Phone Number"
-        value={form.phonenumber}
-        onChange={handleChange}
-      />
-      {fieldErrors.phonenumber && (
-        <p style={{ color: "red" }}>{fieldErrors.phonenumber[0]}</p>
-      )}
+          <form onSubmit={handleRegister}>
+            {/* Username */}
+            <div className="input-group">
+              <label>Username</label>
+              <div className={`input-wrapper ${fieldErrors.username ? "error-mode" : ""}`}>
+                <span className="icon left-icon">👤</span>
+                <input
+                  name="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  value={form.username}
+                  onChange={handleChange}
+                />
+              </div>
+              {fieldErrors.username && <p className="field-error-text">{fieldErrors.username[0]}</p>}
+            </div>
 
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={handleChange}
-      />
-      {fieldErrors.password && (
-        <p style={{ color: "red" }}>{fieldErrors.password[0]}</p>
-      )}
+            {/* Email Address */}
+            <div className="input-group">
+              <label>Email Address</label>
+              <div className={`input-wrapper ${fieldErrors.email ? "error-mode" : ""}`}>
+                <span className="icon left-icon">✉️</span>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={form.email}
+                  onChange={handleChange}
+                />
+              </div>
+              {fieldErrors.email && <p className="field-error-text">{fieldErrors.email[0]}</p>}
+            </div>
 
-      <button type="submit">Register</button>
-    </form>
+            {/* Phone Number */}
+            <div className="input-group">
+              <label>Phone Number</label>
+              <div className={`input-wrapper ${fieldErrors.phonenumber ? "error-mode" : ""}`}>
+                <span className="icon left-icon">📞</span>
+                <input
+                  name="phonenumber"
+                  type="text"
+                  placeholder="Enter your phone number"
+                  value={form.phonenumber}
+                  onChange={handleChange}
+                />
+              </div>
+              {fieldErrors.phonenumber && <p className="field-error-text">{fieldErrors.phonenumber[0]}</p>}
+            </div>
+
+            {/* Password */}
+            <div className="input-group">
+              <label>Password</label>
+              <div className={`input-wrapper ${fieldErrors.password ? "error-mode" : ""}`}>
+                <span className="icon left-icon">🔒</span>
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={form.password}
+                  onChange={handleChange}
+                />
+                <span 
+                  className="icon right-icon" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {showPassword ? "👁️‍🗨️" : "👁️"}
+                </span>
+              </div>
+              {fieldErrors.password && <p className="field-error-text">{fieldErrors.password[0]}</p>}
+            </div>
+
+            <button type="submit" className="submit-btn" style={{ marginTop: '10px' }}>Sign Up</button>
+          </form>
+        </div>
+
+        {/* RIGHT PANE: INFO */}
+        <div className="info-pane">
+          <div className="info-header">
+            <h2>Shop With Us!</h2>
+            <p>Join thousands of happy customers today</p>
+          </div>
+
+          <div className="benefits-list">
+            <div className="benefit-card">
+              <div className="benefit-title">🍎 Fresh Products</div>
+              <p>Daily updated stock of fresh groceries</p>
+            </div>
+            
+            <div className="benefit-card">
+              <div className="benefit-title">⚡ Quick Checkout</div>
+              <p>Save time with our optimized shopping flow</p>
+            </div>
+
+            <div className="benefit-card">
+              <div className="benefit-title">🎁 Member Rewards</div>
+              <p>Earn points on every purchase you make</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 };
 

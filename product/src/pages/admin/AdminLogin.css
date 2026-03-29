@@ -1,0 +1,358 @@
+/* --- Base Reset & Variables --- */
+:root {
+    --primary-green: #4A9B76;
+    --primary-green-hover: #3d8262;
+    --error-red: #dc2626; /* New variable for consistency */
+    --light-bg: #f4f7f6;
+    --text-dark: #111827;
+    --text-muted: #6b7280;
+    --border-color: #d1d5db;
+    --btn-inactive: #f3f4f6;
+    --gradient-top: #A4D6C1;
+    --gradient-bottom: #599F7D;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--light-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Main Layout --- */
+.auth-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-container {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    display: flex;
+    width: 90vw;
+    height: 90vh;
+    max-width: 1600px;
+    min-height: 700px;
+    overflow: hidden; 
+}
+
+/* --- Left Pane (Form Area) --- */
+.form-pane {
+    flex: 1;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.logo-icon {
+    background: var(--primary-green);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.logo-text h1 {
+    color: var(--primary-green);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.logo-text p {
+    color: var(--text-muted);
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+/* --- Toggle Buttons --- */
+.toggle-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn.active {
+    background-color: var(--primary-green);
+    color: white;
+    box-shadow: 0 4px 10px rgba(74, 155, 118, 0.3);
+}
+
+.toggle-btn.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(74, 155, 118, 0.4);
+}
+
+.toggle-btn.inactive {
+    background-color: var(--btn-inactive);
+    color: var(--text-muted);
+}
+
+.toggle-btn.inactive:hover {
+    background-color: #e5e7eb;
+    color: var(--text-dark);
+}
+
+/* --- Form Styling --- */
+.form-header {
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    color: var(--text-dark);
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.form-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* --- Focus States --- */
+.input-wrapper input:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 4px rgba(74, 155, 118, 0.1);
+}
+
+.input-wrapper .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.input-wrapper input:focus + .icon, 
+.input-wrapper input:focus ~ .icon {
+    color: var(--primary-green);
+}
+
+.input-wrapper .left-icon {
+    left: 14px;
+}
+
+.input-wrapper .right-icon {
+    right: 14px;
+    cursor: pointer;
+}
+
+/* =========================================
+   ERROR STATES (The Red Line Changes)
+   ========================================= */
+
+/* Border turns red when error-mode is active */
+.input-wrapper.error-mode input {
+    border-color: var(--error-red) !important;
+    /* Optional: Added the shake animation here */
+    animation: shake 0.4s ease-in-out; 
+}
+
+/* Glow turns red when focused in error mode */
+.input-wrapper.error-mode input:focus {
+    border-color: var(--error-red) !important;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Icons turn red in error mode */
+.input-wrapper.error-mode .icon {
+    color: var(--error-red) !important;
+}
+
+/* --- Submit Button & Other Elements --- */
+.forgot-password {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.forgot-password a {
+    color: var(--primary-green);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-green-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(74, 155, 118, 0.4);
+}
+
+/* --- Right Pane --- */
+.info-pane {
+    flex: 1;
+    background: linear-gradient(135deg, var(--gradient-top), var(--gradient-bottom));
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+}
+
+.benefits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Change this number to make the gap bigger or smaller */
+}
+
+.benefit-card {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.benefit-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+/* =========================================
+   MESSAGING & TOAST NOTIFICATIONS
+   ========================================= */
+
+.toast-error {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background-color: var(--error-red);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* --- Field Specific Error Text --- */
+.field-error-text {
+    color: var(--error-red);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 6px;
+    margin-left: 4px;
+    animation: fadeIn 0.3s ease;
+}
+
+.msg-success {
+    color: #059669;
+    background: #d1fae5;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #a7f3d0;
+    animation: fadeIn 0.3s ease;
+}
+
+/* --- Animations --- */
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+        height: auto;
+        width: 95vw;
+    }
+    .info-pane { display: none; }
+    .form-pane { padding: 30px; }
+}
