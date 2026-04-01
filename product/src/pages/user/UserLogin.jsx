@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import authService from "../../auth/authService";
 import { loginSuccess } from "../../auth/authSlice";
-import { Link } from "react-router-dom";
 import "../admin/AdminLogin.css"; // Using the shared design styles
 
 const UserLogin = () => {
@@ -11,11 +10,19 @@ const UserLogin = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // For eye icon toggle
+  const [showPassword, setShowPassword] = useState(false);
+
+  // --- OTP States ---
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [tempToken, setTempToken] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [otpSuccess, setOtpSuccess] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // STEP 1: Initial Login (Email/Password)
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -25,44 +32,61 @@ const UserLogin = () => {
 
     if (!res || res.data?.success === false) {
       setError(res?.data?.message || "Invalid email or password");
-      
-      // Clear error toast after 3 seconds to match Admin behavior
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      
+      setTimeout(() => setError(""), 3000);
       return;
     }
 
-    setMessage(res.data.message);
+    // Capture the temp token and show the sending message
+    setTempToken(res.data.tempToken);
+    setMessage(res.data.message); 
 
-    dispatch(
-      loginSuccess({
-        email: res.data.data.email,
-        role: "user",
-      })
-    );
-
+    // Wait 3.5 seconds then open the OTP Modal
     setTimeout(() => {
-      navigate("/user/dashboard");
-    }, 800);
+      setMessage(""); 
+      setShowOtpModal(true);
+    }, 3500);
+  };
+
+  // STEP 2: Verify OTP
+  const handleOtpVerify = async (e) => {
+    e.preventDefault();
+    setOtpError("");
+    setOtpSuccess("");
+
+    const res = await authService.verifyOtp({ 
+      tempToken, 
+      otp 
+    });
+
+    if (res && res.data?.success) {
+      setOtpSuccess("Login Successful!");
+      
+      dispatch(
+        loginSuccess({
+          email: res.data.data.email,
+          role: "user",
+        })
+      );
+
+      // Redirect to user dashboard after a brief delay
+      setTimeout(() => {
+        navigate("/user/dashboard");
+      }, 1500);
+    } else {
+      setOtpError("Login Failed: Invalid OTP");
+    }
   };
 
   return (
     <div className="auth-wrapper">
-      {/* --- TOAST ERROR MESSAGE --- */}
-      {error && (
-        <div className="toast-error">
-          ⚠️ {error}
-        </div>
-      )}
+      {/* Toast Messages */}
+      {error && <div className="toast-error">⚠️ {error}</div>}
+      {message && <div className="toast-success-popup">✉️ {message}</div>}
 
       <div className="auth-container">
         
-        {/* LEFT PANE: FORM */}
+        {/* LEFT PANE: LOGIN FORM */}
         <div className="form-pane">
-          
-          {/* Logo Area */}
           <div className="logo">
             <div className="logo-icon">🛒</div>
             <div className="logo-text">
@@ -71,7 +95,6 @@ const UserLogin = () => {
             </div>
           </div>
 
-          {/* Toggle Buttons */}
           <div className="toggle-buttons">
             <button type="button" className="toggle-btn active">Login</button>
             <button 
@@ -83,17 +106,12 @@ const UserLogin = () => {
             </button>
           </div>
 
-          {/* Form Header */}
           <div className="form-header">
             <h2>Welcome Back!</h2>
             <p>Login to start your shopping journey</p>
           </div>
 
-          {/* Success Message */}
-          {message && <p className="msg-success">{message}</p>}
-
           <form onSubmit={handleLogin}>
-            {/* Email Input */}
             <div className="input-group">
               <label>Email Address</label>
               <div className={`input-wrapper ${error ? "error-mode" : ""}`}>
@@ -108,7 +126,6 @@ const UserLogin = () => {
               </div>
             </div>
 
-            {/* Password Input */}
             <div className="input-group">
               <label>Password</label>
               <div className={`input-wrapper ${error ? "error-mode" : ""}`}>
@@ -123,7 +140,6 @@ const UserLogin = () => {
                 <span 
                   className="icon right-icon" 
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ cursor: 'pointer' }}
                 >
                   {showPassword ? "👁️‍🗨️" : "👁️"}
                 </span>
@@ -138,7 +154,7 @@ const UserLogin = () => {
           </form>
         </div>
 
-        {/* RIGHT PANE: INFO & BENEFITS */}
+        {/* RIGHT PANE: USER BENEFITS */}
         <div className="info-pane">
           <div className="info-header">
             <h2>Nest Family</h2>
@@ -164,6 +180,40 @@ const UserLogin = () => {
         </div>
 
       </div>
+
+      {/* --- OTP MODAL POPUP --- */}
+      {showOtpModal && (
+        <div className="otp-overlay">
+          <div className="otp-card">
+            <h2>Verify OTP</h2>
+            <p>Enter the 6-digit code sent to your email</p>
+            
+            <form onSubmit={handleOtpVerify}>
+              <input 
+                type="text" 
+                className="otp-input"
+                maxLength="6" 
+                placeholder="000000"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+              />
+              
+              {otpError && <p className="otp-msg-error">{otpError}</p>}
+              {otpSuccess && <p className="otp-msg-success">{otpSuccess}</p>}
+
+              <button type="submit" className="otp-submit-btn">Verify & Proceed</button>
+              <button 
+                type="button" 
+                className="otp-cancel" 
+                onClick={() => setShowOtpModal(false)}
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

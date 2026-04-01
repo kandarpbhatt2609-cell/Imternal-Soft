@@ -327,6 +327,97 @@ body {
     border: 1px solid #a7f3d0;
     animation: fadeIn 0.3s ease;
 }
+/* --- OTP Modal Styles --- */
+.otp-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.otp-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+.otp-card h2 {
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.otp-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 24px;
+    letter-spacing: 10px;
+    text-align: center;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    margin: 20px 0;
+    outline: none;
+}
+
+.otp-input:focus {
+    border-color: var(--primary-green);
+}
+
+.otp-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.otp-cancel {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* OTP Specific Messages */
+.otp-msg-error {
+    color: var(--error-red);
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.otp-msg-success {
+    color: #059669;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Custom Success Toast for Step 1 */
+.toast-success-popup {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background-color: var(--primary-green);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    z-index: 9999;
+    animation: slideInRight 0.4s ease forwards;
+}
 
 /* --- Animations --- */
 @keyframes slideInRight {

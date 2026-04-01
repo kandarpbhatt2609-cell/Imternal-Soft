@@ -1,27 +1,31 @@
-import axios from 'axios';
+import api from '../api/axios'; // 👈 Use your centralized instance
 import conf from '../conf/conf.js';
 
-const Adminlogin = `${conf.API_URL}/auth/api/admin/login`;
-const AdminRegister = `${conf.API_URL}/auth/api/admin/register`;
-const UserRegister = `${conf.API_URL}/auth/api/user/register`;
-const EmployeeRegister = `${conf.API_URL}/auth/api/employee/register`;
-
 class AuthService {
-
-  async adminLogin(data) {
+  // 🔹 ADMIN AUTH
+ async adminLogin(data) {
     try {
-      const response = await axios.post(
-        Adminlogin,
-        data,
-        { withCredentials: true }
-      );
+      const response = await api.post("/auth/api/admin/login", data);
+      
+      // 👇 ADD THIS: If login is successful and a token is returned, save it!
+      if (response.data?.success && response.data.token) {
+        localStorage.setItem("my_admin_token", response.data.token);
+      }
+      
       return response;
     } catch (error) {
       return error.response;
     }
   }
 
-  // ✅ ADMIN REGISTER (FIXED)
+  async getAdminSession() {
+    try {
+      return await api.get("/auth/api/admin/dashboard");
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async adminRegister(data) {
     try {
       const formData = new FormData();
@@ -34,22 +38,48 @@ class AuthService {
         formData.append("profile_image", data.image);
       }
 
-      const res = await axios.post(
-        AdminRegister, // ✅ FIXED
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" }
-        }
-      );
-
-      return res;
+      return await api.post("/auth/api/admin/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
     } catch (err) {
       return err.response;
     }
   }
 
-  // ✅ USER REGISTER (EXACT SAME LOGIC)
+  // 🔹 EMPLOYEE AUTH
+  async employeeLogin(data) {
+    try {
+      return await api.post("/auth/api/employee/login", data);
+    } catch (error) {
+      return error.response;
+    }
+  }
+
+  async getEmployeeSession() {
+    return await api.get("/auth/api/employee/dashboard");
+  }
+
+  async employeeRegister(data) {
+    try {
+      return await api.post("/auth/api/employee/register", data);
+    } catch (err) {
+      return err.response;
+    }
+  }
+
+  // 🔹 USER AUTH
+  async userLogin(data) {
+    try {
+      return await api.post("/auth/api/user/login", data);
+    } catch (error) {
+      return error.response;
+    }
+  }
+
+  async getUserSession() {
+    return await api.get("/auth/api/user/dashboard");
+  }
+
   async userRegister(data) {
     try {
       const formData = new FormData();
@@ -62,74 +92,25 @@ class AuthService {
         formData.append("profile_image", data.image);
       }
 
-      const res = await axios.post(
-        UserRegister,
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" }
-        }
-      );
-
-      return res;
+      return await api.post("/auth/api/user/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
     } catch (err) {
       return err.response;
     }
   }
 
-  async employeeRegister(data) {
-  try {
-    // Matches the structure in your userRegister method
-    return await axios.post(EmployeeRegister, data, {
-      withCredentials: true,
-    });
-  } catch (err) {
-    return err.response;
+  // 🔹 OTP & SHARED
+  async verifyOtp(data) {
+    try {
+      return await api.post("/auth/api/user/verify-otp", data);
+    } catch (error) {
+      return error.response;
+    }
   }
-}
-
-  async getAdminSession() {
-    return axios.get(
-      `${conf.API_URL}/auth/api/admin/dashboard`,
-      { withCredentials: true }
-    );
-  }
-
-  async employeeLogin(data) {
-    return axios.post(
-      `${conf.API_URL}/auth/api/employee/login`,
-      data,
-      { withCredentials: true }
-    );
-  }
-
-  async getEmployeeSession() {
-  return axios.get(
-    `${conf.API_URL}/auth/api/employee/dashboard`, // Correct endpoint for employees
-    { withCredentials: true }
-  );
-}
-  async userLogin(data) {
-    return axios.post(
-      `${conf.API_URL}/auth/api/user/login`,
-      data,
-      { withCredentials: true }
-    );
-  }
-
-  async getUserSession() {
-  return axios.get(
-    `${conf.API_URL}/auth/api/user/dashboard`,
-    { withCredentials: true }
-  );
-}
-
 
   async getCurrentUser() {
-    return axios.get(
-      `${conf.API_URL}/api/auth/me`,
-      { withCredentials: true }
-    );
+    return await api.get("/api/auth/me");
   }
 
   async logout(role) {
@@ -139,11 +120,11 @@ class AuthService {
       user: "/auth/api/user/logout",
     };
 
-    return axios.post(
-      `${conf.API_URL}${map[role]}`,
-      {},
-      { withCredentials: true }
-    );
+    try {
+      return await api.post(map[role], {});
+    } catch (error) {
+      return error.response;
+    }
   }
 }
 
