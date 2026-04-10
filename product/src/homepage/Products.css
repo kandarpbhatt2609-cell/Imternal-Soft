@@ -1,0 +1,155 @@
+.products-section {
+  padding: 60px 0;
+}
+
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-dark);
+}
+
+.cat-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-grey);
+}
+
+.cat-list li {
+  cursor: pointer;
+}
+
+.cat-list li:hover {
+  color: var(--nest-primary);
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.product-card {
+  border: 1px solid var(--border-light);
+  border-radius: 15px;
+  padding: 20px;
+  transition: 0.3s;
+  background: var(--white);
+  position: relative;
+}
+
+.product-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border-color: var(--primary-green);
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--primary-green);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 15px 0 20px 0;
+  font-size: 12px;
+}
+
+.img-placeholder {
+  margin-bottom: 12px;
+}
+
+.img-placeholder img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.category-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-grey);
+  margin-bottom: 0.35rem;
+}
+
+.product-card h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.35;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.price .current {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--nest-primary);
+}
+
+.price .old {
+  font-size: 0.9rem;
+  color: var(--text-grey);
+  text-decoration: line-through;
+}
+
+.add-btn {
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: var(--primary-green);
+  color: #fff;
+}
+
+.add-btn:hover {
+  background: var(--nest-primary-hover);
+}
+
+.product-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}

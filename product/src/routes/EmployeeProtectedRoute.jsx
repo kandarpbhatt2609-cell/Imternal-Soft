@@ -5,51 +5,23 @@ import authService from "../auth/authService";
 import { loginSuccess, logout } from "../auth/authSlice"; 
 
 const EmployeeProtectedRoute = ({ children }) => { 
-  const dispatch = useDispatch(); 
-  const isLoggedIn = useSelector(state => state.auth.status); 
-  const [loading, setLoading] = useState(true);
+  const status = useSelector(state => state.auth.status); 
 
-  useEffect(() => {
-    // 👈 Fix: If Redux already knows we are logged in, don't ping the backend again
-    if (isLoggedIn === true) {
-      setLoading(false);
-      return;
-    }
+  // STATE 1: Still checking session in App.jsx
+  if (status === null) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+        <div style={{ width: '40px', height: '40px', border: '3px solid #f3f3f3', borderTop: '3px solid #3BB77E', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <h3 style={{ color: '#253d4e', fontWeight: '700' }}>Verifying Employee Session...</h3>
+        <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
-    if (isLoggedIn === false) {
-      setLoading(false);
-      return;
-    }
-
-    // If status is null (meaning page was refreshed), check the cookie session
-    let mounted = true;
-    authService.getEmployeeSession()
-      .then(res => {
-        if (!mounted) return;
-        if (res?.data?.success) {
-          dispatch(loginSuccess({
-            email: res.data.data?.email,
-            role: "employee",
-          }));
-        } else {
-          dispatch(logout());
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Session check failed:", err);
-        if (mounted) {
-          dispatch(logout());
-          setLoading(false);
-        }
-      });
-
-    return () => { mounted = false; };
-  }, [isLoggedIn, dispatch]); // 👈 Added isLoggedIn to dependencies
-
-  if (loading) return <p>Verifying Employee Session...</p>; 
-
-  if (!isLoggedIn) return <Navigate to="/employee/login" replace />;
+  // STATE 2: Not logged in
+  if (status === false) {
+    return <Navigate to="/employee/login" replace />;
+  }
 
   return children; 
 }; 

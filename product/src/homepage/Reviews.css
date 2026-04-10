@@ -1,0 +1,49 @@
+/* Review Slider */
+.review-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 30px;
+  padding: 20px 0;
+  scroll-behavior: smooth;
+}
+
+.review-slider::-webkit-scrollbar {
+  display: none; /* Keeps it clean */
+}
+
+.review-card {
+  min-width: 350px;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  padding: 30px;
+  border-radius: 20px;
+}
+
+/* Footer Styles */
+.main-footer {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: 80px 0 30px 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.footer-col h4 {
+  margin-bottom: 25px;
+  font-size: 1.2rem;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 15px;
+  color: #adadad;
+}

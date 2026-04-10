@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import authService from "../../auth/authService";
 import { loginSuccess } from "../../auth/authSlice";
 import "../admin/AdminLogin.css";
@@ -94,7 +94,16 @@ const UserRegister = () => {
       <div className="auth-container">
         
         {/* LEFT PANE: FORM */}
-        <div className="form-pane">
+        <div className="form-pane relative">
+          <Link 
+            to="/" 
+            className="absolute top-8 right-8 lg:top-10 lg:right-10 flex items-center gap-2 text-[#4b5563] bg-white hover:text-[var(--nest-primary)] 
+                       hover:shadow-md px-4 py-2 rounded-full font-bold shadow-sm transition-all z-10 text-[13px] border border-gray-200"
+            style={{ textDecoration: "none" }}
+          >
+            <span>🏠 Home</span>
+          </Link>
+
           <div className="logo">
             <div className="logo-icon">🛒</div>
             <div className="logo-text">

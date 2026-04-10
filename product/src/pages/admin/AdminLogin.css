@@ -1,15 +1,15 @@
 /* --- Base Reset & Variables --- */
 :root {
-    --primary-green: #4A9B76;
-    --primary-green-hover: #3d8262;
-    --error-red: #dc2626; /* New variable for consistency */
+    --primary-green: #51A37E; /* New lighter green from mockup */
+    --primary-green-hover: #408b68;
+    --error-red: #dc2626;
     --light-bg: #f4f7f6;
     --text-dark: #111827;
     --text-muted: #6b7280;
     --border-color: #d1d5db;
     --btn-inactive: #f3f4f6;
-    --gradient-top: #A4D6C1;
-    --gradient-bottom: #599F7D;
+    --gradient-top: #A8D7C2;
+    --gradient-bottom: #66A388;
 }
 
 * {

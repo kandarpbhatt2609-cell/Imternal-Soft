@@ -5,46 +5,21 @@ import authService from "../auth/authService";
 import { loginSuccess, logout } from "../auth/authSlice"; 
 
 const AdminProtectedRoute = ({ children }) => { 
-    const dispatch = useDispatch(); 
-    const isLoggedIn = useSelector(state => state.auth.status); 
-    const [loading, setLoading] = useState(true); // 👈 Track the check process
+    const status = useSelector(state => state.auth.status); 
 
-    useEffect(() => { 
-        const checkSession = async () => {
-            if (!isLoggedIn) { 
-                try {
-                    const res = await authService.getAdminSession(); 
-                    if (res.data?.success) { 
-                        dispatch(loginSuccess({ 
-                            email: res.data.admin.email, 
-                            role: "admin", 
-                        })); 
-                    } else {
-                        dispatch(logout());
-                    }
-                } catch (error) {
-                    dispatch(logout());
-                } finally {
-                    setLoading(false); // 👈 Check is done
-                }
-            } else {
-                setLoading(false);
-            }
-        };
-        
-        checkSession();
-    }, [isLoggedIn, dispatch]); 
-
-    if (loading) {
+    // STATE 1: Still checking session in App.jsx
+    if (status === null) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-                <p>Checking session... Please wait.</p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+                <div style={{ width: '40px', height: '40px', border: '3px solid #f3f3f3', borderTop: '3px solid #3BB77E', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                <h3 style={{ color: '#253d4e', fontWeight: '700' }}>Verifying Admin Session...</h3>
+                <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
             </div>
         );
     }
 
-    // If loading is finished and still not logged in, redirect to login
-    if (!isLoggedIn) {
+    // STATE 2: Not logged in
+    if (status === false) {
         return <Navigate to="/admin/login" replace />;
     }
 

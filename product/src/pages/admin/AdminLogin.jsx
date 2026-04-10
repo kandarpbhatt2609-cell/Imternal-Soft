@@ -53,7 +53,8 @@ const AdminLogin = () => {
     setOtpError("");
     setOtpSuccess("");
 
-    const res = await authService.verifyOtp({ tempToken, otp });
+    // ✅ FIX APPLED HERE: Changed verifyOtp to verifyAdminOtp
+    const res = await authService.verifyAdminOtp({ tempToken, otp });
 
     if (res && res.data?.success) {
       setOtpSuccess("Login Successful!");
@@ -64,12 +65,13 @@ const AdminLogin = () => {
           role: "admin",
         })
       );
+      localStorage.setItem('userRole', 'admin');
 
       setTimeout(() => {
         navigate("/admin/dashboard");
       }, 1500);
     } else {
-      setOtpError("Login Failed: Invalid OTP");
+      setOtpError(res?.data?.message || "Login Failed: Invalid OTP");
     }
   };
 
@@ -115,7 +117,7 @@ const AdminLogin = () => {
               <div className={`input-wrapper ${error ? "error-mode" : ""}`}>
                 <span className="icon left-icon">🔒</span>
                 <input type={showPassword ? "text" : "password"} placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <span className="icon right-icon" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "👁️‍🗨️" : "👁️"}</span>
+                <span className="icon right-icon" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "👁️🗨️" : "👁️"}</span>
               </div>
             </div>
 

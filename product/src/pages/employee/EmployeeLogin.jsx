@@ -57,7 +57,7 @@ const EmployeeLogin = () => {
     setOtpError("");
     setOtpSuccess("");
 
-    const res = await authService.verifyOtp({ tempToken, otp });
+    const res = await authService.verifyEmployeeOtp({ tempToken, otp });
 
     if (res && res.data?.success) {
       setOtpSuccess("Login Successful!");
@@ -68,6 +68,7 @@ const EmployeeLogin = () => {
           role: "employee",
         })
       );
+      localStorage.setItem('userRole', 'employee');
 
       setTimeout(() => {
         navigate("/employee/dashboard");

@@ -53,7 +53,7 @@ const UserLogin = () => {
     setOtpError("");
     setOtpSuccess("");
 
-    const res = await authService.verifyOtp({ 
+    const res = await authService.verifyUserOtp({ 
       tempToken, 
       otp 
     });
@@ -67,10 +67,13 @@ const UserLogin = () => {
           role: "user",
         })
       );
+      localStorage.setItem('userRole', 'user');
 
-      // Redirect to user dashboard after a brief delay
+      // Redirect to destination after a brief delay
       setTimeout(() => {
-        navigate("/user/dashboard");
+        const queryParams = new URLSearchParams(window.location.search);
+        const redirectUrl = queryParams.get("redirect") || "/";
+        navigate(redirectUrl);
       }, 1500);
     } else {
       setOtpError("Login Failed: Invalid OTP");
@@ -86,7 +89,16 @@ const UserLogin = () => {
       <div className="auth-container">
         
         {/* LEFT PANE: LOGIN FORM */}
-        <div className="form-pane">
+        <div className="form-pane relative">
+          <Link 
+            to="/" 
+            className="absolute top-8 right-8 lg:top-10 lg:right-10 flex items-center gap-2 text-[#4b5563] bg-white hover:text-[var(--nest-primary)] 
+                       hover:shadow-md px-4 py-2 rounded-full font-bold shadow-sm transition-all z-10 text-[13px] border border-gray-200"
+            style={{ textDecoration: "none" }}
+          >
+            <span>🏠 Home</span>
+          </Link>
+          
           <div className="logo">
             <div className="logo-icon">🛒</div>
             <div className="logo-text">

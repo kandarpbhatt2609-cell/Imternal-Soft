@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+
+:root {
+  --nest-primary: #58a389;
+  --nest-primary-hover: #4a9076;
+  --hero-mint: #c8ead9;
+  --text-dark: #253d4e;
+  --text-grey: #7e7e7e;
+  --nav-muted: #9ca3af;
+  --border-search: #d1d5db;
+  --nest-green: #58a389;
+  --hero-bg: #c8ead9;
+  --primary-green: #58a389;
+  --border-light: #ececec;
+  --white: #ffffff;
+  --secondary-warm: #f8f9fa;
+  --primary-dark: #253d4e;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  margin: 0;
+  color: var(--text-dark);
+}
+
+/* Main content width: ~92% of viewport (centered) */
+.homepage-shell {
+  width: 92%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main-homepage-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-homepage-wrapper main {
+  flex: 1;
+}
