@@ -404,8 +404,32 @@ const Navbar = () => {
         <nav className="border-t border-b border-[#E8EAED] bg-white" aria-label="Main">
           <div className="homepage-shell flex flex-wrap items-end gap-7 md:gap-9 lg:gap-10 pt-2.5 pb-1.5 md:pt-3 md:pb-2 min-h-[34px] md:min-h-[38px]">
             <NavLink to="/" end className={subNavClass}>Home</NavLink>
-            <NavLink to="/about" className={subNavClass}>About</NavLink>
-            <NavLink to="/contact" className={subNavClass}>Contact</NavLink>
+            <NavLink 
+              to="/#about-us" 
+              className={({ isActive }) => subNavClass({ isActive: window.location.hash === '#about-us' })}
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' });
+                  window.history.pushState(null, '', '#about-us');
+                }
+              }}
+            >
+              About
+            </NavLink>
+            <NavLink 
+              to="/#contact-us" 
+              className={({ isActive }) => subNavClass({ isActive: window.location.hash === '#contact-us' })}
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  document.getElementById('contact-us')?.scrollIntoView({ behavior: 'smooth' });
+                  window.history.pushState(null, '', '#contact-us');
+                }
+              }}
+            >
+              Contact
+            </NavLink>
             {isAuthenticated === true && (
               <NavLink to="/user/orders" className={subNavClass}>My Orders</NavLink>
             )}

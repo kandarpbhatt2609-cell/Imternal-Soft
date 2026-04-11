@@ -3,7 +3,7 @@ import NestCartIcon from '../components/NestCartIcon';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#253D4E] text-white pt-20 pb-10">
+    <footer id="contact-us" className="bg-[#253D4E] text-white pt-20 pb-10">
       <div className="homepage-shell">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-16">
           <div>

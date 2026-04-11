@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, logout } from "./auth/authSlice";
@@ -93,8 +93,8 @@ function App() {
       <Routes>
       {/* Public Home Page */}
       <Route path="/" element={<Home />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/about" element={<Navigate to="/#about-us" replace />} />
+      <Route path="/contact" element={<Navigate to="/#contact-us" replace />} />
       <Route path="/category/:categoryName" element={<CategoryPage />} />
       <Route path="/search" element={<SearchPage />} />
 

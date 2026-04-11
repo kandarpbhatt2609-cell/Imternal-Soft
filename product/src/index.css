@@ -1,7 +1,7 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+@import "tailwindcss";
 
 :root {
   font-family: 'Quicksand', sans-serif;
@@ -12,8 +12,6 @@
   100% { background-position: 200% 0; }
 }
 
-/* Import the font required for the professional look */
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
 body {
   font-family: 'Quicksand', sans-serif;

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import authService from "../../auth/authService";
 import { loginSuccess } from "../../auth/authSlice";
 import "./AdminLogin.css"; 
+import NestCartIcon from "../../components/NestCartIcon";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -86,7 +87,7 @@ const AdminLogin = () => {
         {/* LEFT PANE: FORM */}
         <div className="form-pane">
           <div className="logo">
-            <div className="logo-icon">🛒</div>
+            <div className="logo-icon"><NestCartIcon /></div>
             <div className="logo-text">
               <h1>Nest</h1>
               <p>MART & GROCERY</p>

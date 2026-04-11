@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutUs = () => {
   return (
-    <section className="w-full py-16 md:py-24 font-['Quicksand'] bg-white">
+    <section id="about-us" className="w-full py-16 md:py-24 font-['Quicksand'] bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Top Header Section */}
         <div className="w-full flex flex-col items-center justify-center text-center mb-16 md:mb-20 mx-auto">

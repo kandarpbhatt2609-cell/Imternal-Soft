@@ -4,6 +4,7 @@ import axios from "axios";
 import conf from "../../conf/conf";
 import "./AdminForgotPassword.css"; // Using the new design file
 import "./AdminLogin.css";
+import NestCartIcon from "../../components/NestCartIcon";
 
 const AdminForgotPassword = () => {
     const [email, setEmail] = useState("");
@@ -124,7 +125,7 @@ const AdminForgotPassword = () => {
             <div className="forgot-password-card">
                 {/* --- LOGO SECTION --- */}
                 <div className="logo-section">
-                    <div className="logo-icon-box">🛒</div>
+                    <div className="logo-icon-box"><NestCartIcon /></div>
                     <div className="logo-text-box">
                         <h1>Nest</h1>
                         <p>MART & GROCERY</p>

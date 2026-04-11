@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import conf from "../../conf/conf";
 import "../admin/AdminForgotPassword.css"; // Reuse the new premium cardinal design
+import NestCartIcon from "../../components/NestCartIcon";
 
 const EmployeeForgotPassword = () => {
     const [email, setEmail] = useState("");
@@ -127,7 +128,7 @@ const EmployeeForgotPassword = () => {
             <div className="forgot-password-card">
                 {/* --- LOGO SECTION --- */}
                 <div className="logo-section">
-                    <div className="logo-icon-box">🛒</div>
+                    <div className="logo-icon-box"><NestCartIcon /></div>
                     <div className="logo-text-box">
                         <h1>Nest</h1>
                         <p>MART & GROCERY</p>

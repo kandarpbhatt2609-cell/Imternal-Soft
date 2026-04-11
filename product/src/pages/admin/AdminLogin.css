@@ -68,13 +68,19 @@ body {
 .logo-icon {
     background: var(--primary-green);
     color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 20px;
+    box-shadow: 0 4px 10px rgba(81, 163, 126, 0.2);
+}
+
+.logo-icon svg {
+    width: 24px;
+    height: 24px;
 }
 
 .logo-text h1 {

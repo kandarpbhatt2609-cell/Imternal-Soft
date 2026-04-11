@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import authService from "../../auth/authService";
 import { loginSuccess } from "../../auth/authSlice";
 import "../admin/AdminLogin.css"; // Using the shared design styles
+import NestCartIcon from "../../components/NestCartIcon";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -100,7 +101,7 @@ const UserLogin = () => {
           </Link>
           
           <div className="logo">
-            <div className="logo-icon">🛒</div>
+            <div className="logo-icon"><NestCartIcon /></div>
             <div className="logo-text">
               <h1>Nest</h1>
               <p>MART & GROCERY</p>

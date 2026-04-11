@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import authService from "../../auth/authService";
 import { loginSuccess } from "../../auth/authSlice";
 import "../admin/AdminLogin.css";
+import NestCartIcon from "../../components/NestCartIcon";
 
 const UserRegister = () => {
   const [form, setForm] = useState({
@@ -105,7 +106,7 @@ const UserRegister = () => {
           </Link>
 
           <div className="logo">
-            <div className="logo-icon">🛒</div>
+            <div className="logo-icon"><NestCartIcon /></div>
             <div className="logo-text">
               <h1>Nest</h1>
               <p>MART & GROCERY</p>
