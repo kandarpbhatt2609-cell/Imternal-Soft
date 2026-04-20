@@ -122,7 +122,7 @@ const PopularProducts = () => {
     const batch = batchOverride || selectedBatch;
 
     if (!batch) {
-      showToast('⚠️ Please select a batch before adding to cart.');
+      showToast('⚠️ Please select a weight/unit before adding to cart.');
       return;
     }
 
@@ -346,7 +346,7 @@ const PopularProducts = () => {
                     {/* ===== BATCH SELECTION ===== */}
                     {modalProduct.availableBatches && modalProduct.availableBatches.length > 0 && (
                       <div className="mb-5">
-                        <h4 className="text-gray-800 font-bold mb-3 text-base">Select a Batch</h4>
+                        <h4 className="text-gray-800 font-bold mb-3 text-base">Select Weight/Unit</h4>
                         <div className="flex flex-col gap-3">
                           {modalProduct.availableBatches.map((batch) => {
                             const finalPrice = getBatchFinalPrice(batch);
@@ -366,8 +366,7 @@ const PopularProducts = () => {
                                 {/* Left: batch info */}
                                 <div className="flex flex-col gap-1">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-bold text-gray-800 text-sm">{batch.batchNo}</span>
-                                    <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-mono">{batch.unit}</span>
+                                    <span className="font-bold text-gray-800 text-sm">{batch.unit}</span>
                                   </div>
                                   <div className="text-xs text-gray-500">
                                     Expires: <span className="font-semibold text-gray-700">{new Date(batch.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -457,8 +456,8 @@ const PopularProducts = () => {
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-500">
                   {selectedBatch
-                    ? <span>Batch: <span className="font-bold text-gray-800">{selectedBatch.batchNo}</span></span>
-                    : <span className="text-amber-600 font-medium">⚠️ Please select a batch above</span>
+                    ? <span>Weight/Unit: <span className="font-bold text-gray-800">{selectedBatch.unit}</span></span>
+                    : <span className="text-amber-600 font-medium">⚠️ Please select a weight/unit above</span>
                   }
                 </div>
                 <div className="flex gap-3">
@@ -478,7 +477,7 @@ const PopularProducts = () => {
                   <button
                     onClick={() => {
                       if (!isAuthenticated) { setIsLoginPromptOpen(true); return; }
-                      if (!selectedBatch) { showToast('⚠️ Please select a batch first.'); return; }
+                      if (!selectedBatch) { showToast('⚠️ Please select a weight/unit first.'); return; }
                       setIsOrderModalOpen(true);
                     }}
                     disabled={!selectedBatch}

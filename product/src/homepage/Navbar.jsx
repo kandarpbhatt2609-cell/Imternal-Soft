@@ -74,20 +74,40 @@ const UserAvatar = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  /* upload avatar (stored locally as base64) */
-  const handleAvatarChange = (e) => {
+  /* upload avatar (stored locally and sent to backend) */
+  const handleAvatarChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    
+    // Convert to Base64 for immediate local UI update
     const reader = new FileReader();
     reader.onload = (evt) => {
       const b64 = evt.target.result;
       localStorage.setItem('user_avatar', b64);
       setAvatar(b64);
-      setUploading(false);
     };
     reader.readAsDataURL(file);
-    e.target.value = null;
+
+    try {
+      const formData = new FormData();
+      formData.append('profile_image', file);
+      
+      const res = await api.put('/auth/api/user/profile/update-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      const newImageUrl = res.data?.data?.profile_image || res.data?.profile_image;
+      if (newImageUrl) {
+        setAvatar(newImageUrl);
+        localStorage.setItem('user_avatar', newImageUrl);
+      }
+    } catch (error) {
+      console.error('Failed to update profile image on server:', error);
+    } finally {
+      setUploading(false);
+      e.target.value = null;
+    }
   };
 
   /* logout */

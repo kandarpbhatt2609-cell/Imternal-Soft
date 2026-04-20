@@ -119,7 +119,7 @@ const SearchPage = () => {
     const qty = parseInt(modalQty) || 0;
     if (qty < 1) { setQtyError('⚠️ Minimum 1 quantity required.'); return; }
     setQtyError('');
-    if (!selectedBatch) { showToast('⚠️ Please select a batch.'); return; }
+    if (!selectedBatch) { showToast('⚠️ Please select a weight/unit.'); return; }
 
     try {
       await api.post('/auth/api/user/cart', {
@@ -259,7 +259,7 @@ const SearchPage = () => {
                     {/* ── Batch selection ── */}
                     {modalProduct.availableBatches?.length > 0 && (
                       <div>
-                        <h4 style={{ margin:'0 0 10px', fontWeight:800, fontSize:14, color:'#253d4e' }}>Select a Batch</h4>
+                        <h4 style={{ margin:'0 0 10px', fontWeight:800, fontSize:14, color:'#253d4e' }}>Select Weight/Unit</h4>
                         <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                           {modalProduct.availableBatches.map(batch => {
                             const finalPrice  = getBatchFinalPrice(batch);
@@ -282,8 +282,7 @@ const SearchPage = () => {
                               >
                                 <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
                                   <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                                    <span style={{ fontWeight:700, color:'#253d4e', fontSize:13 }}>{batch.batchNo}</span>
-                                    <span style={{ fontSize:11, background:'#f1f5f9', color:'#64748b', padding:'1px 8px', borderRadius:4, fontFamily:'monospace' }}>{batch.unit}</span>
+                                    <span style={{ fontWeight:700, color:'#253d4e', fontSize:13 }}>{batch.unit}</span>
                                   </div>
                                   <span style={{ fontSize:11, color:'#94a3b8' }}>
                                     Exp: <strong style={{ color:'#475569' }}>{new Date(batch.expiryDate).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}</strong>
@@ -360,8 +359,8 @@ const SearchPage = () => {
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                   <div style={{ fontSize:13, color:'#64748b' }}>
                     {selectedBatch
-                      ? <span>Batch: <strong style={{ color:'#253d4e' }}>{selectedBatch.batchNo}</strong></span>
-                      : <span style={{ color:'#d97706', fontWeight:600 }}>⚠️ Please select a batch</span>
+                      ? <span>Weight/Unit: <strong style={{ color:'#253d4e' }}>{selectedBatch.unit}</strong></span>
+                      : <span style={{ color:'#d97706', fontWeight:600 }}>⚠️ Please select a weight/unit</span>
                     }
                   </div>
                   <div style={{ display:'flex', gap:10 }}>
@@ -378,7 +377,7 @@ const SearchPage = () => {
                     <button
                       onClick={() => {
                         if (!isAuthenticated) { setIsModalOpen(false); setLoginPrompt(true); return; }
-                        if (!selectedBatch) { showToast('⚠️ Please select a batch first.'); return; }
+                        if (!selectedBatch) { showToast('⚠️ Please select a weight/unit first.'); return; }
                         setIsOrderModalOpen(true);
                       }}
                       disabled={!selectedBatch}
@@ -458,7 +457,7 @@ const SearchPage = () => {
                 {/* Info */}
                 <div style={{ flex:1, padding:'14px 16px', display:'flex', flexDirection:'column', gap:6 }}>
                   <span style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.06em' }}>
-                    {item.unit}{item.batchNo && <> · <span style={{ color:'#3BB77E' }}>{item.batchNo}</span></>}
+                    {item.unit}
                   </span>
                   <h4 style={{ margin:0, fontSize:14, fontWeight:700, color:'#253d4e', lineHeight:1.4, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>
                     {item.productName}
