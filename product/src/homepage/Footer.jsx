@@ -106,7 +106,7 @@ const Footer = () => {
                 <span className="text-[var(--nest-primary)] material-icons-outlined">phone</span> +1 (800) 123-4567
               </li>
               <li className="flex gap-3 items-center">
-                <span className="text-[var(--nest-primary)] material-icons-outlined">email</span> sales@nestmart.com
+                <span className="text-[var(--nest-primary)] material-icons-outlined">email</span> nest.official.team@gmail.com
               </li>
             </ul>
             <div className="relative group">
