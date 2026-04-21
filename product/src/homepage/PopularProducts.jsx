@@ -192,11 +192,7 @@ const PopularProducts = () => {
       <section className="products-section w-full">
         <div className="section-header">
           <h2>Popular Products</h2>
-          <ul className="cat-list">
-            <li>All</li>
-            <li>Milks &amp; Dairies</li>
-            <li>Coffee &amp; Teas</li>
-          </ul>
+
         </div>
 
         {loading ? (
