@@ -206,11 +206,11 @@ const PopularProducts = () => {
               const name = item.productName || item.name || 'Product';
               const category = item.category || item.categoryName || 'GENERAL';
               const mrp = parseFloat(item.mrp || 0);
-              const totalPrice = parseFloat(item.totalPrice || item.price || item.sellingPrice || item.displayPrice || 0);
-              const mainPriceToDisplay = mrp > 0 ? mrp : totalPrice;
+              const total = parseFloat(item.totalPrice || item.price || item.sellingPrice || 0);
+              const discount = parseFloat(item.discount || 0);
               const image = item.imageUrl || item.image || item.productImage;
               const inStock = parseInt(item.stock || item.displayStock || 0) > 0 || item.isActive !== false;
-              const tag = item.discount ? `${parseFloat(item.discount).toFixed(2)}%` : (inStock ? 'Sale' : 'Out');
+              const tag = discount > 0 ? `${discount.toFixed(0)}% OFF` : (inStock ? 'Sale' : 'Out');
               const tagColor = '#3BB77E';
 
               return (
@@ -242,7 +242,8 @@ const PopularProducts = () => {
                     <div className="flex items-end justify-between mt-auto pt-1 relative z-10">
                       <div className="flex flex-col gap-1.5">
                         <div className="flex items-center gap-2.5">
-                          <span className="text-[#3BB77E] font-bold text-[19px] leading-none">₹{mainPriceToDisplay.toFixed(2)}</span>
+                          <span className="text-[#3BB77E] font-bold text-[19px] leading-none">₹{total.toFixed(2)}</span>
+                          {discount > 0 && <span className="text-[#adadad] text-[13px] line-through">₹{mrp.toFixed(2)}</span>}
                         </div>
                         {inStock
                           ? <span className="text-[#adadad] text-[12px] font-semibold">In Stock: {parseInt(item.stock || 0)}</span>
