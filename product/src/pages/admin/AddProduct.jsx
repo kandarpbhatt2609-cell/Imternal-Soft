@@ -16,6 +16,8 @@ const AddProduct = ({ categoriesList, onBack }) => {
     cgst: "",
     sgst: "",
     igst: "",
+    sellingPrice: "",
+    unit: "",
     isActive: 1 // 1 for active, 0 for inactive as requested
   });
 
@@ -80,7 +82,7 @@ const AddProduct = ({ categoriesList, onBack }) => {
       setMessage("Product added successfully!");
       // Reset form
       setFormData({
-        categoryId: "", productName: "", brand: "", description: "", cgst: "", sgst: "", igst: "", isActive: 1
+        categoryId: "", productName: "", brand: "", description: "", cgst: "", sgst: "", igst: "", sellingPrice: "", unit: "", isActive: 1
       });
       setImageFile(null);
       setImagePreview(null);
@@ -163,6 +165,29 @@ const AddProduct = ({ categoriesList, onBack }) => {
                 <div>
                     <label style={labelStyle}>IGST (%)</label>
                     <input style={nestInputStyle} type="number" step="0.01" name="igst" value={formData.igst} onChange={handleInputChange} />
+                </div>
+            </div>
+
+            {/* Price and Unit - New section */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", gridColumn: '1 / -1' }}>
+                <div>
+                    <label style={labelStyle}>Selling Price (₹)</label>
+                    <input style={nestInputStyle} type="number" step="0.01" name="sellingPrice" value={formData.sellingPrice} onChange={handleInputChange} required />
+                </div>
+                <div>
+                    <label style={labelStyle}>Unit</label>
+                    <select 
+                        style={{ ...nestInputStyle, appearance: 'auto' }} 
+                        name="unit" 
+                        value={formData.unit} 
+                        onChange={handleInputChange} 
+                        required
+                    >
+                        <option value="" disabled>-- Select Unit --</option>
+                        {categoriesList.find(cat => String(cat.id) === String(formData.categoryId))?.allowedUnits?.map(u => (
+                            <option key={u} value={u}>{u}</option>
+                        )) || <option value="" disabled>Select category first</option>}
+                    </select>
                 </div>
             </div>
 
