@@ -96,14 +96,9 @@ const CategoryPage = () => {
 
   /* ── batch price helper ─────────────────────────────────────────── */
   const getBatchFinalPrice = (batch) => {
-    // Prioritize backend calculated prices
-    if (batch.totalPrice !== undefined && batch.totalPrice !== null) return parseFloat(batch.totalPrice).toFixed(2);
-    if (batch.price !== undefined && batch.price !== null) return parseFloat(batch.price).toFixed(2);
-    if (batch.sellingPrice !== undefined && batch.sellingPrice !== null) return parseFloat(batch.sellingPrice).toFixed(2);
-
-    const mrp      = parseFloat(batch.mrp || 0);
-    const discount = parseFloat(batch.discount || 0);
-    return discount > 0 ? (mrp - (mrp * discount) / 100).toFixed(2) : mrp.toFixed(2);
+    // Return basePrice or mrp. Do NOT calculate discounts on frontend.
+    const price = parseFloat(batch.basePrice || batch.mrp || batch.price || batch.totalPrice || 0);
+    return price.toFixed(2);
   };
 
   /* ── add to cart (from modal) ───────────────────────────────────── */
@@ -440,9 +435,7 @@ const CategoryPage = () => {
       ) : (
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(210px, 1fr))', gap:22, paddingBottom:60 }}>
           {products.map((item) => {
-            const mrp      = parseFloat(item.mrp || 0);
-            const total    = parseFloat(item.totalPrice || 0);
-            const discount = parseFloat(item.discount || 0);
+            const displayPrice = parseFloat(item.basePrice || item.mrp || item.totalPrice || item.price || item.sellingPrice || 0);
             const inStock  = parseInt(item.stock || 0) > 0;
 
             return (
@@ -453,12 +446,7 @@ const CategoryPage = () => {
                 onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 12px 32px rgba(59,183,126,0.16)'; e.currentTarget.style.borderColor='#3BB77E'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 2px 10px rgba(59,183,126,0.07)'; e.currentTarget.style.borderColor='#e8f5ee'; }}
               >
-                {/* Discount badge */}
-                {discount > 0 && (
-                  <div style={{ position:'absolute', top:0, left:0, background:'#3BB77E', color:'#fff', padding:'4px 14px', borderRadius:'18px 0 18px 0', fontSize:11, fontWeight:700, zIndex:1 }}>
-                    {discount.toFixed(0)}% OFF
-                  </div>
-                )}
+                {/* Tag */}
 
                 {/* Image */}
                 <div style={{ background:'#f8fdf9', height:170, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' }}>
@@ -473,9 +461,8 @@ const CategoryPage = () => {
                   <h4 style={{ margin:0, fontSize:14, fontWeight:700, color:'#253d4e', lineHeight:1.4, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>
                     {item.productName}
                   </h4>
-                  <div style={{ display:'flex', alignItems:'baseline', gap:7, marginTop:2 }}>
-                    <span style={{ fontSize:17, fontWeight:800, color:'#3BB77E' }}>₹{total.toFixed(2)}</span>
-                    {discount > 0 && <span style={{ fontSize:12, color:'#94a3b8', textDecoration:'line-through' }}>₹{mrp.toFixed(2)}</span>}
+                  <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                    <span style={{ fontSize:17, fontWeight:800, color:'#3BB77E' }}>₹{displayPrice.toFixed(2)}</span>
                   </div>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:2 }}>
                     {item.expiryDate && (

@@ -144,14 +144,9 @@ const PopularProducts = () => {
 
   // Helper to compute final price for a batch
   const getBatchFinalPrice = (batch) => {
-    // Prioritize price fields from backend if they exist
-    if (batch.totalPrice !== undefined && batch.totalPrice !== null) return parseFloat(batch.totalPrice).toFixed(2);
-    if (batch.price !== undefined && batch.price !== null) return parseFloat(batch.price).toFixed(2);
-    if (batch.sellingPrice !== undefined && batch.sellingPrice !== null) return parseFloat(batch.sellingPrice).toFixed(2);
-
-    const mrp = parseFloat(batch.mrp || 0);
-    const discount = parseFloat(batch.discount || 0);
-    return (mrp - (mrp * discount) / 100).toFixed(2);
+    // Return basePrice or mrp. Do NOT calculate discounts on frontend.
+    const price = parseFloat(batch.basePrice || batch.mrp || batch.price || batch.totalPrice || 0);
+    return price.toFixed(2);
   };
 
   return (
@@ -208,11 +203,10 @@ const PopularProducts = () => {
               const name = item.productName || item.name || 'Product';
               const category = item.category || item.categoryName || 'GENERAL';
               const mrp = parseFloat(item.mrp || 0);
-              const total = parseFloat(item.totalPrice || item.price || item.sellingPrice || 0);
-              const discount = parseFloat(item.discount || 0);
+              const displayPrice = parseFloat(item.basePrice || item.mrp || item.totalPrice || item.price || item.sellingPrice || 0);
               const image = item.imageUrl || item.image || item.productImage;
               const inStock = parseInt(item.stock || item.displayStock || 0) > 0 || item.isActive !== false;
-              const tag = discount > 0 ? `${discount.toFixed(0)}% OFF` : (inStock ? 'Sale' : 'Out');
+              const tag = inStock ? 'Sale' : 'Out';
               const tagColor = '#3BB77E';
 
               return (
@@ -244,8 +238,7 @@ const PopularProducts = () => {
                     <div className="flex items-end justify-between mt-auto pt-1 relative z-10">
                       <div className="flex flex-col gap-1.5">
                         <div className="flex items-center gap-2.5">
-                          <span className="text-[#3BB77E] font-bold text-[19px] leading-none">₹{total.toFixed(2)}</span>
-                          {discount > 0 && <span className="text-[#adadad] text-[13px] line-through">₹{mrp.toFixed(2)}</span>}
+                          <span className="text-[#3BB77E] font-bold text-[19px] leading-none">₹{displayPrice.toFixed(2)}</span>
                         </div>
                         {inStock
                           ? <span className="text-[#adadad] text-[12px] font-semibold">In Stock: {parseInt(item.stock || 0)}</span>
