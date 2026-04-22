@@ -170,7 +170,7 @@ const UpdateProduct = ({ categoriesList, product, onBack }) => {
             {/* Price and Unit - New section */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", gridColumn: '1 / -1' }}>
                 <div>
-                    <label style={labelStyle}>Selling Price (₹)</label>
+                    <label style={labelStyle}>Price (₹)</label>
                     <input style={nestInputStyle} type="number" step="0.01" name="sellingPrice" value={formData.sellingPrice} onChange={handleInputChange} required />
                 </div>
                 <div>

@@ -189,7 +189,7 @@ const CategoryProducts = ({ categoryName, onBack, onEditProduct, onAddBatch, onV
                          style={{
                            background: "#eaf6ed", color: "#3bb77e", padding: "5px 12px",
                            borderRadius: "20px", fontSize: "12px", fontWeight: "bold",
-                           border: "1px solid #cce5ff", cursor: "pointer", marginLeft: "8px", transition: "0.2s"
+                           border: "1px solid #cce5ff", cursor: "pointer", transition: "0.2s"
                          }}
                       >
                          + Batch
@@ -198,15 +198,15 @@ const CategoryProducts = ({ categoryName, onBack, onEditProduct, onAddBatch, onV
                          onClick={(e) => {
                              e.stopPropagation();
                              if (!product.batches || product.batches.length === 0) {
-                                 alert("Please add a batch first.");
+                                  alert("Please add a batch first.");
                              } else {
-                                 onViewBatches && onViewBatches(product);
+                                  onViewBatches && onViewBatches(product);
                              }
                          }}
                          style={{
                            background: "#fff3cd", color: "#856404", padding: "5px 12px",
                            borderRadius: "20px", fontSize: "12px", fontWeight: "bold",
-                           border: "1px solid #ffeeba", cursor: "pointer", marginLeft: "8px", transition: "0.2s"
+                           border: "1px solid #ffeeba", cursor: "pointer", transition: "0.2s"
                          }}
                       >
                          Batches
@@ -216,7 +216,7 @@ const CategoryProducts = ({ categoryName, onBack, onEditProduct, onAddBatch, onV
                          style={{
                            background: "#f0f8ff", color: "#007bff", padding: "5px 12px",
                            borderRadius: "20px", fontSize: "12px", fontWeight: "bold",
-                           border: "1px solid #cce5ff", cursor: "pointer", marginLeft: "8px", transition: "0.2s"
+                           border: "1px solid #cce5ff", cursor: "pointer", transition: "0.2s"
                          }}
                       >
                          Edit
@@ -226,7 +226,7 @@ const CategoryProducts = ({ categoryName, onBack, onEditProduct, onAddBatch, onV
                          style={{
                            background: "#ffe5e5", color: "#dc3545", padding: "5px 12px",
                            borderRadius: "20px", fontSize: "12px", fontWeight: "bold",
-                           border: "1px solid #ffc2c2", cursor: "pointer", marginLeft: "8px", transition: "0.2s"
+                           border: "1px solid #ffc2c2", cursor: "pointer", transition: "0.2s"
                          }}
                       >
                          Delete
@@ -407,10 +407,12 @@ const descriptionStyle = {
 const priceUnitContainer = {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "flex-end",
+    alignItems: "center",
+    flexWrap: "wrap",
     marginTop: "auto",
     paddingTop: "15px",
-    borderTop: "1px dashed #eee"
+    borderTop: "1px dashed #eee",
+    gap: "15px"
 };
 
 const priceBlock = {
@@ -433,7 +435,10 @@ const priceValue = {
 
 const unitBlock = {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: "8px",
+    justifyContent: "flex-end"
 };
 
 const unitBadge = {
