@@ -144,12 +144,14 @@ const PopularProducts = () => {
 
   // Helper to compute final price for a batch
   const getBatchFinalPrice = (batch) => {
+    // Prioritize price fields from backend if they exist
+    if (batch.totalPrice !== undefined && batch.totalPrice !== null) return parseFloat(batch.totalPrice).toFixed(2);
+    if (batch.price !== undefined && batch.price !== null) return parseFloat(batch.price).toFixed(2);
+    if (batch.sellingPrice !== undefined && batch.sellingPrice !== null) return parseFloat(batch.sellingPrice).toFixed(2);
+
     const mrp = parseFloat(batch.mrp || 0);
     const discount = parseFloat(batch.discount || 0);
-    if (discount > 0) {
-      return (mrp - (mrp * discount) / 100).toFixed(2);
-    }
-    return mrp.toFixed(2);
+    return (mrp - (mrp * discount) / 100).toFixed(2);
   };
 
   return (

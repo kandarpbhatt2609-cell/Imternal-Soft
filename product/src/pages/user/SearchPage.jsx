@@ -103,6 +103,11 @@ const SearchPage = () => {
 
   /* ── batch price helper ─────────────────────────────────────────── */
   const getBatchFinalPrice = (batch) => {
+    // Prioritize backend calculated prices
+    if (batch.totalPrice !== undefined && batch.totalPrice !== null) return parseFloat(batch.totalPrice).toFixed(2);
+    if (batch.price !== undefined && batch.price !== null) return parseFloat(batch.price).toFixed(2);
+    if (batch.sellingPrice !== undefined && batch.sellingPrice !== null) return parseFloat(batch.sellingPrice).toFixed(2);
+
     const mrp      = parseFloat(batch.mrp || 0);
     const discount = parseFloat(batch.discount || 0);
     return discount > 0 ? (mrp - (mrp * discount) / 100).toFixed(2) : mrp.toFixed(2);
