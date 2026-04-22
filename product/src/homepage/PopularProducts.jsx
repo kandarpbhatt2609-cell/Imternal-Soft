@@ -144,9 +144,10 @@ const PopularProducts = () => {
 
   // Helper to compute final price for a batch
   const getBatchFinalPrice = (batch) => {
-    // Return basePrice or mrp. Do NOT calculate discounts on frontend.
-    const price = parseFloat(batch.basePrice || batch.mrp || batch.price || batch.totalPrice || 0);
-    return price.toFixed(2);
+    // Exactly matching backend logic: pricePerUnit = basePrice - discount
+    const basePrice = parseFloat(batch.basePrice || batch.mrp || 0);
+    const discount = parseFloat(batch.discount || 0);
+    return (basePrice - discount).toFixed(2);
   };
 
   return (
@@ -203,7 +204,9 @@ const PopularProducts = () => {
               const name = item.productName || item.name || 'Product';
               const category = item.category || item.categoryName || 'GENERAL';
               const mrp = parseFloat(item.mrp || 0);
-              const displayPrice = parseFloat(item.basePrice || item.mrp || item.totalPrice || item.price || item.sellingPrice || 0);
+              const basePrice = parseFloat(item.basePrice || mrp);
+              const discount = parseFloat(item.discount || 0);
+              const displayPrice = basePrice - discount;
               const image = item.imageUrl || item.image || item.productImage;
               const inStock = parseInt(item.stock || item.displayStock || 0) > 0 || item.isActive !== false;
               const tag = inStock ? 'Sale' : 'Out';
@@ -239,6 +242,7 @@ const PopularProducts = () => {
                       <div className="flex flex-col gap-1.5">
                         <div className="flex items-center gap-2.5">
                           <span className="text-[#3BB77E] font-bold text-[19px] leading-none">₹{displayPrice.toFixed(2)}</span>
+                          {mrp > displayPrice && <span className="text-[#adadad] text-[13px] line-through">₹{mrp.toFixed(2)}</span>}
                         </div>
                         {inStock
                           ? <span className="text-[#adadad] text-[12px] font-semibold">In Stock: {parseInt(item.stock || 0)}</span>

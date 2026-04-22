@@ -103,9 +103,10 @@ const SearchPage = () => {
 
   /* ── batch price helper ─────────────────────────────────────────── */
   const getBatchFinalPrice = (batch) => {
-    // Return basePrice or mrp. Do NOT calculate discounts on frontend.
-    const price = parseFloat(batch.basePrice || batch.mrp || batch.price || batch.totalPrice || 0);
-    return price.toFixed(2);
+    // Exactly matching backend logic: pricePerUnit = basePrice - discount
+    const basePrice = parseFloat(batch.basePrice || batch.mrp || 0);
+    const discount = parseFloat(batch.discount || 0);
+    return (basePrice - discount).toFixed(2);
   };
 
   /* ── add to cart (from modal) ───────────────────────────────────── */
@@ -439,7 +440,9 @@ const SearchPage = () => {
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(210px, 1fr))', gap:22, paddingBottom:60 }}>
           {products.map((item) => {
             const mrp      = parseFloat(item.mrp || 0);
-            const displayPrice = parseFloat(item.basePrice || item.mrp || item.totalPrice || item.price || item.sellingPrice || 0);
+            const basePrice = parseFloat(item.basePrice || mrp);
+            const discount = parseFloat(item.discount || 0);
+            const displayPrice = basePrice - discount;
             
             // More robust "in stock" logic: check stock number, status string, or active flag
             const stockCount = parseInt(item.stock || item.totalAvailableStock || 0);
@@ -468,6 +471,7 @@ const SearchPage = () => {
                   </h4>
                   <div style={{ display:'flex', alignItems:'center', gap:6 }}>
                     <span style={{ fontSize:17, fontWeight:800, color:'#3BB77E' }}>₹{displayPrice.toFixed(2)}</span>
+                    {mrp > displayPrice && <span style={{ fontSize:12, color:'#94a3b8', textDecoration:'line-through' }}>₹{mrp.toFixed(2)}</span>}
                   </div>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:2 }}>
                     {item.expiryDate && (
