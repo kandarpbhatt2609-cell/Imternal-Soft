@@ -365,7 +365,9 @@ const PopularProducts = () => {
                                     <span style={{ fontWeight:700, color:'#253d4e', fontSize:13 }}>
                                       {batch.baseWeight && batch.baseUnit 
                                         ? `${batch.baseWeight}${batch.baseUnit}` 
-                                        : batch.unit}
+                                        : (batch.weight && batch.unit && batch.unit !== batch.weight)
+                                          ? `${batch.weight}${batch.unit}`
+                                          : batch.unit}
                                     </span>
                                   </div>
                                   <div className="text-xs text-gray-500">
@@ -459,7 +461,9 @@ const PopularProducts = () => {
                     ? <span>Weight/Unit: <strong style={{ color:'#253d4e' }}>
                         {selectedBatch.baseWeight && selectedBatch.baseUnit 
                           ? `${selectedBatch.baseWeight}${selectedBatch.baseUnit}` 
-                          : selectedBatch.unit}
+                          : (selectedBatch.weight && selectedBatch.unit && selectedBatch.unit !== selectedBatch.weight)
+                            ? `${selectedBatch.weight}${selectedBatch.unit}`
+                            : selectedBatch.unit}
                       </strong></span>
                     : <span style={{ color:'#d97706', fontWeight:600 }}>⚠️ Please select a weight/unit</span>
                   }

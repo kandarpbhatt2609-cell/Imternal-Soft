@@ -285,7 +285,9 @@ const SearchPage = () => {
                                     <span style={{ fontWeight:700, color:'#253d4e', fontSize:13 }}>
                                       {batch.baseWeight && batch.baseUnit 
                                         ? `${batch.baseWeight}${batch.baseUnit}` 
-                                        : batch.unit}
+                                        : (batch.weight && batch.unit && batch.unit !== batch.weight)
+                                          ? `${batch.weight}${batch.unit}`
+                                          : batch.unit}
                                     </span>
                                   </div>
                                   <span style={{ fontSize:11, color:'#94a3b8' }}>
@@ -366,7 +368,9 @@ const SearchPage = () => {
                       ? <span>Weight/Unit: <strong style={{ color:'#253d4e' }}>
                           {selectedBatch.baseWeight && selectedBatch.baseUnit 
                             ? `${selectedBatch.baseWeight}${selectedBatch.baseUnit}` 
-                            : selectedBatch.unit}
+                            : (selectedBatch.weight && selectedBatch.unit && selectedBatch.unit !== selectedBatch.weight)
+                              ? `${selectedBatch.weight}${selectedBatch.unit}`
+                              : selectedBatch.unit}
                         </strong></span>
                       : <span style={{ color:'#d97706', fontWeight:600 }}>⚠️ Please select a weight/unit</span>
                     }
@@ -465,7 +469,7 @@ const SearchPage = () => {
                 {/* Info */}
                 <div style={{ flex:1, padding:'14px 16px', display:'flex', flexDirection:'column', gap:6 }}>
                   <span style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.06em' }}>
-                    {item.unit}
+                    {item.baseWeight && item.baseUnit ? `${item.baseWeight}${item.baseUnit}` : item.unit}
                   </span>
                   <h4 style={{ margin:0, fontSize:14, fontWeight:700, color:'#253d4e', lineHeight:1.4, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>
                     {item.productName}
