@@ -78,27 +78,30 @@ const PopularProducts = () => {
     setQtyError('');
     try {
         let productDetails = null;
+        
+        // 1. Try to fetch exactly by the provided identifier (ID or SKU)
         try {
-            // First try fetching with the provided identifier (might be SKU or ID)
-            const response = await api.get(`/auth/api/user/product/${identifier}`);
-            productDetails = response.data?.data || response.data;
+            const res = await api.get(`/auth/api/user/product/${identifier}`);
+            productDetails = res.data?.data || res.data;
         } catch (err) {
-            // Fallback: fetch all products and map to SKU
-            const allProductsRes = await api.get('/auth/api/user/products');
-            let productData = allProductsRes.data?.data || allProductsRes.data?.products || allProductsRes.data || [];
-            productData = Array.isArray(productData) ? productData : [];
-            
-            const matchedProduct = productData.find(p => p.id == identifier || p._id == identifier || p.productId == identifier);
-            if (matchedProduct && matchedProduct.sku) {
-                const response = await api.get(`/auth/api/user/products/sku/${matchedProduct.sku}`);
-                productDetails = response.data?.data || response.data;
-            } else {
-                throw new Error("Product details not found or missing SKU mapping.");
+            console.log('Fetch by /product/ failed, falling back to /products/sku/');
+        }
+
+        // 2. If it failed, try the specific SKU endpoint
+        if (!productDetails) {
+            try {
+                const res = await api.get(`/auth/api/user/products/sku/${identifier}`);
+                productDetails = res.data?.data || res.data;
+            } catch (err) {
+                console.error('Failed to fetch product by both ID and SKU');
             }
         }
-        setModalProduct(productDetails);
-        if (productDetails?.availableBatches?.length > 0) {
-          setSelectedBatch(productDetails.availableBatches[0]);
+
+        if (productDetails) {
+            setModalProduct(productDetails);
+            if (productDetails.availableBatches?.length > 0) {
+                setSelectedBatch(productDetails.availableBatches[0]);
+            }
         }
     } catch (error) {
       console.error("Error fetching product details:", error);
