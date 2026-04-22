@@ -27,7 +27,7 @@ const ViewBatchDetails = ({ product, onBack }) => {
         discount: batch.discount,
         currentStock: batch.currentStock,
         expiryDate: batch.expiryDate ? new Date(batch.expiryDate).toISOString().split('T')[0] : "",
-        isActive: batch.isActive !== false
+        isActive: batch.isActive === 1 || batch.isActive === true || batch.isActive === undefined
     });
   };
 
@@ -42,8 +42,8 @@ const ViewBatchDetails = ({ product, onBack }) => {
   const toggleBatchStatus = async (batch) => {
     try {
         const batchId = batch.id || batch._id;
-        // Handle both 0/1 and true/false
-        const currentActive = batch.isActive === 1 || batch.isActive === true || batch.isActive === undefined;
+        // Handle 0/1, true/false, and strings '0'/'1'
+        const currentActive = batch.isActive === 1 || batch.isActive === true || batch.isActive === '1' || batch.isActive === undefined;
         const newStatus = currentActive ? 0 : 1;
         
         await api.put(`/auth/api/admin/batches/update/${batchId}`, {
@@ -109,6 +109,7 @@ const ViewBatchDetails = ({ product, onBack }) => {
             <thead>
                 <tr>
                 <th style={thStyle}>Batch No</th>
+                <th style={thStyle}>Unit</th>
                 <th style={thStyle}>MRP (₹)</th>
                 <th style={thStyle}>Base (₹)</th>
                 <th style={thStyle}>Disc. (%)</th>
@@ -127,7 +128,11 @@ const ViewBatchDetails = ({ product, onBack }) => {
                   return (
                     <tr key={bId || i} style={{ borderBottom: "1px solid #eee", transition: "0.2s", background: isEditing ? "#f0f8ff" : "transparent" }}>
                         <td style={{...tdStyle, fontWeight: 'bold'}}>{b.batchNo}</td>
-                        
+                        <td style={tdStyle}>
+                          {b.baseWeight && b.baseUnit 
+                            ? `${b.baseWeight}${b.baseUnit}` 
+                            : b.unit}
+                        </td>
                         <td style={tdStyle}>
                           {isEditing ? <input style={inputStyle} type="number" step="0.01" name="mrp" value={editFormData.mrp} onChange={handleEditChange} /> : `₹${b.mrp}`}
                         </td>
@@ -161,13 +166,12 @@ const ViewBatchDetails = ({ product, onBack }) => {
                                 style={{ 
                                   background: (b.isActive === 1 || b.isActive === true || b.isActive === undefined) ? "#eaf6ed" : "#ffe5e5", 
                                   color: (b.isActive === 1 || b.isActive === true || b.isActive === undefined) ? "#3bb77e" : "#dc3545", 
-                                  padding: "4px 12px", 
+                                  padding: "5px 12px", 
                                   borderRadius: "20px", 
                                   fontSize: "12px", 
                                   fontWeight: "bold",
                                   border: "none",
-                                  cursor: "pointer",
-                                  transition: "0.2s"
+                                  cursor: "pointer"
                                 }}
                               >
                                   {(b.isActive === 1 || b.isActive === true || b.isActive === undefined) ? "Active" : "Inactive"}

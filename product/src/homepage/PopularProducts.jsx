@@ -361,8 +361,12 @@ const PopularProducts = () => {
                               >
                                 {/* Left: batch info */}
                                 <div className="flex flex-col gap-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-bold text-gray-800 text-sm">{batch.unit}</span>
+                                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                                    <span style={{ fontWeight:700, color:'#253d4e', fontSize:13 }}>
+                                      {batch.baseWeight && batch.baseUnit 
+                                        ? `${batch.baseWeight}${batch.baseUnit}` 
+                                        : batch.unit}
+                                    </span>
                                   </div>
                                   <div className="text-xs text-gray-500">
                                     Expires: <span className="font-semibold text-gray-700">{new Date(batch.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -450,10 +454,14 @@ const PopularProducts = () => {
 
               {/* Batch summary + action buttons */}
               <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-500">
+                <div style={{ fontSize:13, color:'#64748b' }}>
                   {selectedBatch
-                    ? <span>Weight/Unit: <span className="font-bold text-gray-800">{selectedBatch.unit}</span></span>
-                    : <span className="text-amber-600 font-medium">⚠️ Please select a weight/unit above</span>
+                    ? <span>Weight/Unit: <strong style={{ color:'#253d4e' }}>
+                        {selectedBatch.baseWeight && selectedBatch.baseUnit 
+                          ? `${selectedBatch.baseWeight}${selectedBatch.baseUnit}` 
+                          : selectedBatch.unit}
+                      </strong></span>
+                    : <span style={{ color:'#d97706', fontWeight:600 }}>⚠️ Please select a weight/unit</span>
                   }
                 </div>
                 <div className="flex gap-3">

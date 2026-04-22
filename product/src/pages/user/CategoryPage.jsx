@@ -279,7 +279,11 @@ const CategoryPage = () => {
                               >
                                 <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
                                   <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                                    <span style={{ fontWeight:700, color:'#253d4e', fontSize:13 }}>{batch.unit}</span>
+                                    <span style={{ fontWeight:700, color:'#253d4e', fontSize:13 }}>
+                                      {batch.baseWeight && batch.baseUnit 
+                                        ? `${batch.baseWeight}${batch.baseUnit}` 
+                                        : batch.unit}
+                                    </span>
                                   </div>
                                   <span style={{ fontSize:11, color:'#94a3b8' }}>
                                     Exp: <strong style={{ color:'#475569' }}>{new Date(batch.expiryDate).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}</strong>
@@ -356,7 +360,11 @@ const CategoryPage = () => {
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                   <div style={{ fontSize:13, color:'#64748b' }}>
                     {selectedBatch
-                      ? <span>Weight/Unit: <strong style={{ color:'#253d4e' }}>{selectedBatch.unit}</strong></span>
+                      ? <span>Weight/Unit: <strong style={{ color:'#253d4e' }}>
+                          {selectedBatch.baseWeight && selectedBatch.baseUnit 
+                            ? `${selectedBatch.baseWeight}${selectedBatch.baseUnit}` 
+                            : selectedBatch.unit}
+                        </strong></span>
                       : <span style={{ color:'#d97706', fontWeight:600 }}>⚠️ Please select a weight/unit</span>
                     }
                   </div>
