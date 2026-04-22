@@ -68,8 +68,8 @@ const PopularProducts = () => {
     fetchProducts();
   }, []);
 
-  const handleProductClick = async (identifier) => {
-    if (!identifier) return;
+  const handleProductClick = async (sku) => {
+    if (!sku) return;
     setIsModalOpen(true);
     setModalLoading(true);
     setModalProduct(null);
@@ -77,34 +77,15 @@ const PopularProducts = () => {
     setModalQty(1);
     setQtyError('');
     try {
-        let productDetails = null;
-        
-        // 1. Try to fetch exactly by the provided identifier (ID or SKU)
-        try {
-            const res = await api.get(`/auth/api/user/product/${identifier}`);
-            productDetails = res.data?.data || res.data;
-        } catch (err) {
-            console.log('Fetch by /product/ failed, falling back to /products/sku/');
-        }
-
-        // 2. If it failed, try the specific SKU endpoint
-        if (!productDetails) {
-            try {
-                const res = await api.get(`/auth/api/user/products/sku/${identifier}`);
-                productDetails = res.data?.data || res.data;
-            } catch (err) {
-                console.error('Failed to fetch product by both ID and SKU');
-            }
-        }
-
-        if (productDetails) {
-            setModalProduct(productDetails);
-            if (productDetails.availableBatches?.length > 0) {
-                setSelectedBatch(productDetails.availableBatches[0]);
-            }
-        }
+      const response = await api.get(`/auth/api/user/products/sku/${sku}`);
+      const data = response.data?.data || response.data;
+      setModalProduct(data);
+      // Pre-select the first available batch
+      if (data?.availableBatches?.length > 0) {
+        setSelectedBatch(data.availableBatches[0]);
+      }
     } catch (error) {
-      console.error("Error fetching product details:", error);
+      console.error('Error fetching product details:', error);
     } finally {
       setModalLoading(false);
     }
@@ -235,7 +216,7 @@ const PopularProducts = () => {
                 <div
                   className="product-card flex flex-col h-full cursor-pointer hover:-translate-y-1 transition-transform"
                   key={id}
-                  onClick={() => handleProductClick(item.id || item.productId || item._id || item.sku)}
+                  onClick={() => handleProductClick(item.sku)}
                 >
                   {tag && parseFloat(item.discount) > 0 && <div className="badge" style={{ backgroundColor: tagColor }}>{tag}</div>}
                   <div className="img-placeholder" style={{ position: 'relative', width: '100%', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>

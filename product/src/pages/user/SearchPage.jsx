@@ -79,8 +79,8 @@ const SearchPage = () => {
   };
 
   /* ── open product detail modal ───────────────────────────────────── */
-  const handleProductClick = async (identifier) => {
-    if (!identifier) return;
+  const handleProductClick = async (sku) => {
+    if (!sku) return;
     setIsModalOpen(true);
     setModalLoading(true);
     setModalProduct(null);
@@ -88,34 +88,14 @@ const SearchPage = () => {
     setModalQty(1);
     setQtyError('');
     try {
-        let productDetails = null;
-        
-        // 1. Try to fetch exactly by the provided identifier (ID or SKU)
-        try {
-            const res = await api.get(`/auth/api/user/product/${identifier}`);
-            productDetails = res.data?.data || res.data;
-        } catch (err) {
-            console.log('Fetch by /product/ failed, falling back to /products/sku/');
-        }
-
-        // 2. If it failed, try the specific SKU endpoint
-        if (!productDetails) {
-            try {
-                const res = await api.get(`/auth/api/user/products/sku/${identifier}`);
-                productDetails = res.data?.data || res.data;
-            } catch (err) {
-                console.error('Failed to fetch product by both ID and SKU');
-            }
-        }
-
-        if (productDetails) {
-            setModalProduct(productDetails);
-            if (productDetails.availableBatches?.length > 0) {
-                setSelectedBatch(productDetails.availableBatches[0]);
-            }
-        }
-    } catch (error) {
-      console.error("Error fetching product details:", error);
+      const res  = await api.get(`/auth/api/user/products/sku/${sku}`);
+      const data = res.data?.data || res.data;
+      setModalProduct(data);
+      if (data?.availableBatches?.length > 0) {
+        setSelectedBatch(data.availableBatches[0]);
+      }
+    } catch (err) {
+      console.error('Error fetching product details:', err);
     } finally {
       setModalLoading(false);
     }
@@ -471,7 +451,7 @@ const SearchPage = () => {
             return (
               <div
                 key={item.id + item.sku}
-                onClick={() => handleProductClick(item.id || item.productId || item._id || item.sku)}
+                onClick={() => handleProductClick(item.sku)}
                 style={{ background:'#fff', border:'1.5px solid #e8f5ee', borderRadius:18, overflow:'hidden', display:'flex', flexDirection:'column', position:'relative', boxShadow:'0 2px 10px rgba(59,183,126,0.07)', transition:'all 0.22s', cursor:'pointer' }}
                 onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 12px 32px rgba(59,183,126,0.16)'; e.currentTarget.style.borderColor='#3BB77E'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 2px 10px rgba(59,183,126,0.07)'; e.currentTarget.style.borderColor='#e8f5ee'; }}
