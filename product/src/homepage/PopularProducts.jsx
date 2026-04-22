@@ -68,8 +68,8 @@ const PopularProducts = () => {
     fetchProducts();
   }, []);
 
-  const handleProductClick = async (sku) => {
-    if (!sku) return;
+  const handleProductClick = async (identifier) => {
+    if (!identifier) return;
     setIsModalOpen(true);
     setModalLoading(true);
     setModalProduct(null);
@@ -77,15 +77,31 @@ const PopularProducts = () => {
     setModalQty(1);
     setQtyError('');
     try {
-      const response = await api.get(`/auth/api/user/products/sku/${sku}`);
-      const data = response.data?.data || response.data;
-      setModalProduct(data);
-      // Pre-select the first available batch
-      if (data?.availableBatches?.length > 0) {
-        setSelectedBatch(data.availableBatches[0]);
-      }
+        let productDetails = null;
+        try {
+            // First try fetching with the provided identifier (might be SKU or ID)
+            const response = await api.get(`/auth/api/user/product/${identifier}`);
+            productDetails = response.data?.data || response.data;
+        } catch (err) {
+            // Fallback: fetch all products and map to SKU
+            const allProductsRes = await api.get('/auth/api/user/products');
+            let productData = allProductsRes.data?.data || allProductsRes.data?.products || allProductsRes.data || [];
+            productData = Array.isArray(productData) ? productData : [];
+            
+            const matchedProduct = productData.find(p => p.id == identifier || p._id == identifier || p.productId == identifier);
+            if (matchedProduct && matchedProduct.sku) {
+                const response = await api.get(`/auth/api/user/products/sku/${matchedProduct.sku}`);
+                productDetails = response.data?.data || response.data;
+            } else {
+                throw new Error("Product details not found or missing SKU mapping.");
+            }
+        }
+        setModalProduct(productDetails);
+        if (productDetails?.availableBatches?.length > 0) {
+          setSelectedBatch(productDetails.availableBatches[0]);
+        }
     } catch (error) {
-      console.error('Error fetching product details:', error);
+      console.error("Error fetching product details:", error);
     } finally {
       setModalLoading(false);
     }
@@ -216,7 +232,7 @@ const PopularProducts = () => {
                 <div
                   className="product-card flex flex-col h-full cursor-pointer hover:-translate-y-1 transition-transform"
                   key={id}
-                  onClick={() => handleProductClick(item.sku)}
+                  onClick={() => handleProductClick(item.id || item.productId || item._id || item.sku)}
                 >
                   {tag && parseFloat(item.discount) > 0 && <div className="badge" style={{ backgroundColor: tagColor }}>{tag}</div>}
                   <div className="img-placeholder" style={{ position: 'relative', width: '100%', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>

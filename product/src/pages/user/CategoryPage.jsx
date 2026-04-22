@@ -72,8 +72,8 @@ const CategoryPage = () => {
   };
 
   /* ── open product detail modal ───────────────────────────────────── */
-  const handleProductClick = async (sku) => {
-    if (!sku) return;
+  const handleProductClick = async (identifier) => {
+    if (!identifier) return;
     setIsModalOpen(true);
     setModalLoading(true);
     setModalProduct(null);
@@ -81,14 +81,31 @@ const CategoryPage = () => {
     setModalQty(1);
     setQtyError('');
     try {
-      const res  = await api.get(`/auth/api/user/products/sku/${sku}`);
-      const data = res.data?.data || res.data;
-      setModalProduct(data);
-      if (data?.availableBatches?.length > 0) {
-        setSelectedBatch(data.availableBatches[0]);
-      }
-    } catch (err) {
-      console.error('Error fetching product details:', err);
+        let productDetails = null;
+        try {
+            // First try fetching with the provided identifier (might be SKU or ID)
+            const response = await api.get(`/auth/api/user/product/${identifier}`);
+            productDetails = response.data?.data || response.data;
+        } catch (err) {
+            // Fallback: fetch all products and map to SKU
+            const allProductsRes = await api.get('/auth/api/user/products');
+            let productData = allProductsRes.data?.data || allProductsRes.data?.products || allProductsRes.data || [];
+            productData = Array.isArray(productData) ? productData : [];
+            
+            const matchedProduct = productData.find(p => p.id == identifier || p._id == identifier || p.productId == identifier);
+            if (matchedProduct && matchedProduct.sku) {
+                const response = await api.get(`/auth/api/user/products/sku/${matchedProduct.sku}`);
+                productDetails = response.data?.data || response.data;
+            } else {
+                throw new Error("Product details not found or missing SKU mapping.");
+            }
+        }
+        setModalProduct(productDetails);
+        if (productDetails?.availableBatches?.length > 0) {
+          setSelectedBatch(productDetails.availableBatches[0]);
+        }
+    } catch (error) {
+      console.error("Error fetching product details:", error);
     } finally {
       setModalLoading(false);
     }
@@ -445,7 +462,7 @@ const CategoryPage = () => {
             return (
               <div
                 key={item.id + item.sku}
-                onClick={() => handleProductClick(item.sku)}
+                onClick={() => handleProductClick(item.id || item.productId || item._id || item.sku)}
                 style={{ background:'#fff', border:'1.5px solid #e8f5ee', borderRadius:18, overflow:'hidden', display:'flex', flexDirection:'column', position:'relative', boxShadow:'0 2px 10px rgba(59,183,126,0.07)', transition:'all 0.22s', cursor:'pointer' }}
                 onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 12px 32px rgba(59,183,126,0.16)'; e.currentTarget.style.borderColor='#3BB77E'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 2px 10px rgba(59,183,126,0.07)'; e.currentTarget.style.borderColor='#e8f5ee'; }}

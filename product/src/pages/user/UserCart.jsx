@@ -238,8 +238,9 @@ const UserCart = () => {
                     const category = productData.category || productData.categoryName || "GENERAL";
                     const image = productData.imageUrl || productData.image || productData.productImage;
                     const mrp = parseFloat(productData.mrp || 0);
-                    const totalPrice = parseFloat(productData.totalPrice || productData.price || productData.sellingPrice || productData.displayPrice || productData.payablePricePerUnit || 0);
-                    const mainPriceToDisplay = mrp > 0 ? mrp : totalPrice;
+                    const basePrice = parseFloat(productData.basePrice || mrp);
+                    const discount = parseFloat(productData.discount || 0);
+                    const mainPriceToDisplay = basePrice - discount;
                     const qty = cartItem.quantity || 1;
 
                     return (
@@ -327,8 +328,9 @@ const UserCart = () => {
           const grandTotal = cartItems.reduce((sum, ci) => {
             const p = ci.product || ci;
             const mrp = parseFloat(p.mrp || 0);
-            const price = parseFloat(p.totalPrice || p.price || p.sellingPrice || p.displayPrice || p.payablePricePerUnit || 0);
-            const unit = mrp > 0 ? mrp : price;
+            const basePrice = parseFloat(p.basePrice || mrp);
+            const discount = parseFloat(p.discount || 0);
+            const unit = basePrice - discount;
             return sum + unit * (ci.quantity || 1);
           }, 0);
           return (
@@ -367,8 +369,9 @@ const UserCart = () => {
                   {cartItems.map((ci, idx) => {
                     const p = ci.product || ci;
                     const mrp = parseFloat(p.mrp || 0);
-                    const price = parseFloat(p.totalPrice || p.price || p.sellingPrice || 0);
-                    const unit = mrp > 0 ? mrp : price;
+                    const basePrice = parseFloat(p.basePrice || mrp);
+                    const discount = parseFloat(p.discount || 0);
+                    const unit = basePrice - discount;
                     const qty = ci.quantity || 1;
                     const name = p.productName || p.name || 'Product';
                     return (
@@ -566,8 +569,10 @@ const UserCart = () => {
           const grandTotal = cartItems.reduce((sum, ci) => {
             const p = ci.product || ci;
             const mrp   = parseFloat(p.mrp || 0);
-            const price = parseFloat(p.totalPrice || p.price || p.sellingPrice || p.displayPrice || p.payablePricePerUnit || 0);
-            return sum + (mrp > 0 ? mrp : price) * (ci.quantity || 1);
+            const basePrice = parseFloat(p.basePrice || mrp);
+            const discount = parseFloat(p.discount || 0);
+            const unitPrice = basePrice - discount;
+            return sum + (unitPrice) * (ci.quantity || 1);
           }, 0);
           return { totalItems, grandTotal };
         })()}
