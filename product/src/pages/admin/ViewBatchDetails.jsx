@@ -39,6 +39,25 @@ const ViewBatchDetails = ({ product, onBack }) => {
     });
   };
 
+  const toggleBatchStatus = async (batch) => {
+    try {
+        const batchId = batch.id || batch._id;
+        // Handle both 0/1 and true/false
+        const currentActive = batch.isActive === 1 || batch.isActive === true || batch.isActive === undefined;
+        const newStatus = currentActive ? 0 : 1;
+        
+        await api.put(`/auth/api/admin/batches/update/${batchId}`, {
+            ...batch, // Spread existing fields to be safe
+            isActive: newStatus
+        });
+        
+        setBatches(prev => prev.map(b => (b.id || b._id) === batchId ? { ...b, isActive: newStatus } : b));
+    } catch (err) {
+        console.error("Status toggle error:", err);
+        alert("Failed to update status.");
+    }
+  };
+
   const submitUpdate = async (batchId) => {
     try {
         const payload = {
@@ -137,16 +156,22 @@ const ViewBatchDetails = ({ product, onBack }) => {
                                   <input type="checkbox" name="isActive" checked={editFormData.isActive} onChange={handleEditChange} /> Active
                               </label>
                           ) : (
-                              <span style={{ 
-                                  background: b.isActive ? "#eaf6ed" : "#ffe5e5", 
-                                  color: b.isActive ? "#3bb77e" : "#dc3545", 
-                                  padding: "4px 10px", 
+                              <button 
+                                onClick={() => toggleBatchStatus(b)}
+                                style={{ 
+                                  background: (b.isActive === 1 || b.isActive === true || b.isActive === undefined) ? "#eaf6ed" : "#ffe5e5", 
+                                  color: (b.isActive === 1 || b.isActive === true || b.isActive === undefined) ? "#3bb77e" : "#dc3545", 
+                                  padding: "4px 12px", 
                                   borderRadius: "20px", 
                                   fontSize: "12px", 
-                                  fontWeight: "bold" 
-                              }}>
-                                  {b.isActive !== false ? "Active" : "Inactive"}
-                              </span>
+                                  fontWeight: "bold",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  transition: "0.2s"
+                                }}
+                              >
+                                  {(b.isActive === 1 || b.isActive === true || b.isActive === undefined) ? "Active" : "Inactive"}
+                              </button>
                           )}
                         </td>
 

@@ -4,16 +4,37 @@ import AuthImage from "../../components/AuthImage";
 
 
 // Toggle component for product status
-const ProductStatusToggle = ({ initialStatus }) => {
+const ProductStatusToggle = ({ product }) => {
   // Assume active if not explicitly 0 or false
-  const [isActive, setIsActive] = useState(initialStatus === 0 || initialStatus === false ? false : true);
+  const [isActive, setIsActive] = useState(product.isActive === 0 || product.isActive === false ? false : true);
+  const [loading, setLoading] = useState(false);
+
+  const handleToggle = async (e) => {
+    e.stopPropagation();
+    setLoading(true);
+    try {
+        const targetId = product.id || product._id;
+        const newStatus = isActive ? 0 : 1;
+        
+        // Use JSON if possible, otherwise FormData would be needed for multipart backends
+        await api.put(`/auth/api/admin/products/update/${targetId}`, { 
+            ...product, // Send existing data to satisfy potential required fields
+            isActive: newStatus 
+        });
+        
+        setIsActive(!isActive);
+    } catch (err) {
+        console.error("Product status toggle error:", err);
+        alert("Failed to update product status.");
+    } finally {
+        setLoading(false);
+    }
+  };
 
   return (
     <button 
-      onClick={(e) => {
-        e.stopPropagation();
-        setIsActive(!isActive);
-      }} 
+      onClick={handleToggle} 
+      disabled={loading}
       style={{ 
         background: isActive ? "#eaf6ed" : "#ffe5e5", 
         color: isActive ? "#3bb77e" : "#dc3545", 
@@ -22,12 +43,13 @@ const ProductStatusToggle = ({ initialStatus }) => {
         fontSize: "12px", 
         fontWeight: "bold", 
         border: "none", 
-        cursor: "pointer", 
+        cursor: loading ? "wait" : "pointer", 
         transition: "0.2s",
-        marginLeft: "8px"
+        marginLeft: "8px",
+        opacity: loading ? 0.7 : 1
       }}
     >
-      {isActive ? "Active" : "Inactive"}
+      {loading ? "..." : (isActive ? "Active" : "Inactive")}
     </button>
   );
 };
@@ -183,7 +205,7 @@ const CategoryProducts = ({ categoryName, onBack, onEditProduct, onAddBatch, onV
                   </div>
                   <div style={unitBlock}>
                       {product.unit && <span style={unitBadge}>{product.unit}</span>}
-                      <ProductStatusToggle initialStatus={product.isActive} />
+                      <ProductStatusToggle product={product} />
                       <button 
                          onClick={(e) => { e.stopPropagation(); onAddBatch && onAddBatch(product); }}
                          style={{
